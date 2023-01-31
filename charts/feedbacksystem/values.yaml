@@ -90,7 +90,7 @@ digitalClassroom:
     secret: "1f2a08f5dbd81580a6fb0f645dce3737"
     bbb:
       url: "https://bbb.example.org"
-      secret: 1234
+      secret: "1234"
 
 mysql:
   auth:
