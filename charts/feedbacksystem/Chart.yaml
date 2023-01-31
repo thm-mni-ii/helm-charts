@@ -34,5 +34,4 @@ dependencies:
     condition: runner.enabled
     alias: runnerPlaygroundPostgres
 maintainers:
-  - name: Frits Team
-    url: https://frits.mni.thm.de/
+  - name: zitrone44
