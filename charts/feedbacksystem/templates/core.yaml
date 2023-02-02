@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: {{ .Release.Name }}-core
-        image: {{ .Values.core.image.registry }}/{{ .Values.core.image.name }}:{{ .Values.core.image.tag }}
+        image: {{ include "fbs-core-image" . }}
         imagePullPolicy: {{ .Values.core.image.pullPolicy }}
         ports:
         - containerPort: 80
