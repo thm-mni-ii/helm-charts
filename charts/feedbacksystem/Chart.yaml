@@ -2,7 +2,7 @@ apiVersion: v2
 name: feedbacksystem
 description: A Helm chart for Kubernetes
 type: application
-version: 0.3.0
+version: 0.4.0
 # renovate: image=thmmniii/fbs-core
 appVersion: v1.4.2
 dependencies:
