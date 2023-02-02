@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: {{ .Release.Name }}-runner
-        image: {{ .Values.runner.image.registry }}/{{ .Values.runner.image.name }}:{{ .Values.runner.image.tag }}
+        image: {{ include "fbs-runner-image" . }}
         imagePullPolicy: {{ .Values.runner.image.pullPolicy }}
         ports:
         - containerPort: 8081

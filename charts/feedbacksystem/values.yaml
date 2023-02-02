@@ -9,7 +9,7 @@ core:
   image:
     registry: docker.io
     name: thmmniii/fbs-core
-    tag: "v1.4.0"
+    tag: ""
     pullPolicy: "IfNotPresent"
   volumes:
     config:
@@ -35,7 +35,7 @@ runner:
   image:
     registry: docker.io
     name: thmmniii/fbs-runner
-    tag: "v1.2.1"
+    tag: ""
     pullPolicy: "IfNotPresent"
   resources:
     cpu:
