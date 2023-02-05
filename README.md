@@ -11,7 +11,7 @@ This repo contains all the Helm charts for this Github organisation.
 ## Usage
 
 [Helm](https://helm.sh) is required to use the charts.  
-Please refer to the [helmet documentation]([https://helm.sh/docs/intro/quickstart/) for installation instructions.
+Please refer to the [Helm documentation](https://helm.sh/docs/intro/quickstart/) for installation instructions.
 
 After the installation, the repo can be added with the following command:
 
