@@ -1,5 +1,7 @@
 # Helm Charts
 
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/thm-mni-ii)](https://artifacthub.io/packages/search?repo=thm-mni-ii)
+
 This repo contains all the Helm charts for this Github organisation.
 
 ## Available charts
