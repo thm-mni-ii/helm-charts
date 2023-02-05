@@ -27,7 +27,7 @@ After the installation, the repo can be added with the following command:
 
 `helm search repo thm-mni-ii`
 
-**To install the <chart-name> chart**:
+**To install the chart**:
 
 `helm install my-<chart-name> thm-mni-ii/<chart-name>`
 
