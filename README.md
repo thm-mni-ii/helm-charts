@@ -6,9 +6,9 @@ This repo contains all the Helm charts for this Github organisation.
 
 ## Available charts
 
-| Chart Name                              | Source Code                                                                                  |
-| --------------------------------------- | -------------------------------------------------------------------------------------------- |
-| [feedbacksystem](charts/feedbacksystem) | [https://github.com/thm-mni-ii/feedbacksystem](https://github.com/thm-mni-ii/feedbacksystem) |
+| Chart Name                              | Source Code                                                                                                                                                           | Package                                                                                                                                                                       |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [feedbacksystem](charts/feedbacksystem) | [![(https://github.com/thm-mni-ii/feedbacksystem](https://img.shields.io/badge/GitHub-Feedbacksystem-blue?logo=github)](https://github.com/thm-mni-ii/feedbacksystem) | [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/feedbacksystem)](https://artifacthub.io/packages/helm/thm-mni-ii/feedbacksystem) |
 
 ## Usage
 
