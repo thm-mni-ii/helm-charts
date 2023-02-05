@@ -64,23 +64,23 @@ There is a [Deno](https://deno.land) script to generate the configuration file f
 
 #### Mysql
 
-| Parameter                       | Description                            | Default   |
-| ------------------------------- | -------------------------------------- | --------- |
-| mysql.auth.database             | The name of the Database               | fbs       |
-| mysql.auth.username             | The name of the Database User          | fbs       |
-| mysql.auth.password             | The Password of the Database User      | fbs       |
-| mysql.auth.rootPassword         | The Password of the Database Root User | root      |
-| mysql.primray.existingConfigmap | **TODO**                               | CHANGE-ME |
+| Parameter                       | Description                                         | Default   |
+| ------------------------------- | --------------------------------------------------- | --------- |
+| mysql.auth.database             | The name of the Database                            | fbs       |
+| mysql.auth.username             | The name of the Database User                       | fbs       |
+| mysql.auth.password             | The Password of the Database User                   | fbs       |
+| mysql.auth.rootPassword         | The Password of the Database Root User              | root      |
+| mysql.primray.existingConfigmap | The name of an existing ConfigMap containg `my.cnf` | CHANGE-ME |
 
 #### Runner Mysql
 
-| Parameter                             | Description                            | Default   |
-| ------------------------------------- | -------------------------------------- | --------- |
-| runnerMysql.auth.database             | The name of the Database               | fbs       |
-| runnerMysql.auth.username             | The name of the Database User          | fbs       |
-| runnerMysql.auth.password             | The Password of the Database User      | fbs       |
-| runnerMysql.auth.rootPassword         | The Password of the Database Root User | root      |
-| runnerMysql.primray.existingConfigmap | **TODO**                               | CHANGE-ME |
+| Parameter                             | Description                                         | Default   |
+| ------------------------------------- | --------------------------------------------------- | --------- |
+| runnerMysql.auth.database             | The name of the Database                            | fbs       |
+| runnerMysql.auth.username             | The name of the Database User                       | fbs       |
+| runnerMysql.auth.password             | The Password of the Database User                   | fbs       |
+| runnerMysql.auth.rootPassword         | The Password of the Database Root User              | root      |
+| runnerMysql.primray.existingConfigmap | The name of an existing ConfigMap containg `my.cnf` | CHANGE-ME |
 
 #### Runner Postgres
 
