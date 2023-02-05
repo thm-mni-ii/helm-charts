@@ -87,7 +87,7 @@ digitalClassroom:
       limit: "4Gi"
   config:
     jwtSecret: "2edb8793d987389e1626918e0ec1dbee"  # CHANGE ME
-    secret: "1f2a08f5dbd81580a6fb0f645dce3737"
+    secret: "1f2a08f5dbd81580a6fb0f645dce3737"  # CHANGE ME
     bbb:
       url: "https://bbb.example.org"
       secret: "1234"
@@ -138,4 +138,4 @@ checkerMongodb:
 
 minio:
   auth:
-    rootPassword: fbs-12345678
+    rootPassword: fbs-12345678  # CHANGE ME

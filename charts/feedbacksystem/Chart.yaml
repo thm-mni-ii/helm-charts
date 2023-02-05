@@ -1,8 +1,12 @@
 apiVersion: v2
 name: feedbacksystem
-description: A Helm chart for Kubernetes
+description: Intelligent, personalized feedback for students using artificial intelligence
+icon: https://frits.mni.thm.de/img/hub/fbs-logo.png
+sources:
+  - https://github.com/thm-mni-ii/feedbacksystem
+home: https://github.com/thm-mni-ii/feedbacksystem
 type: application
-version: 0.4.0
+version: 0.4.1
 # renovate: image=thmmniii/fbs-core
 appVersion: v1.4.2
 dependencies:
@@ -36,3 +40,5 @@ dependencies:
     alias: runnerPlaygroundPostgres
 maintainers:
   - name: zitrone44
+annotations:
+  artifacthub.io/license: Apache-2.0
