@@ -25,7 +25,7 @@ Official Helm Chart for Installing the [Feedbacksystem](https://github.com/thm-m
 There is a [Deno](https://deno.land) script to generate the configuration file for this helm chart. It generates random values for all secrets to be changed and asks for configuration values.
 
 - **Source:** [generate-values.ts](https://github.com/thm-mni-ii/helm-charts/blob/main/charts/feedbacksystem/generate-values.ts)
-- **Usage:** `deno run --reload=https://raw.githubusercontent.com https://raw.githubusercontent.com/thm-mni-ii/helm-charts/main/charts/feedbacksystem/generate-values.ts --allow-write=vals.yaml vals.yaml`
+- **Usage:** `deno run --reload=https://raw.githubusercontent.com --allow-write=vals.yaml https://raw.githubusercontent.com/thm-mni-ii/helm-charts/main/charts/feedbacksystem/generate-values.ts vals.yaml`
 
 ### Parameters
 
