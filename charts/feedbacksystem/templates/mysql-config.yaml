@@ -24,6 +24,7 @@ data:
     slow_query_log_file=/opt/bitnami/mysql/logs/mysqld.log
     long_query_time=10.0
     sql-mode=""
+    skip-log-bin=true 
 
     [client]
     port=3306
