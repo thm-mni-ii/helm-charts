@@ -41,7 +41,7 @@ jobs:
         run: ct lint --config config.yaml --target-branch ${{ github.event.repository.default_branch }}
 
       - name: Create kind cluster
-        uses: helm/kind-action@d8ccf8fb623ce1bb360ae2f45f323d9d5c5e9f00 # v1
+        uses: helm/kind-action@9e8295d178de23cbfbd8fa16cf844eec1d773a07 # v1
         if: steps.list-changed.outputs.changed == 'true'
 
       - name: Run chart-testing (install)
