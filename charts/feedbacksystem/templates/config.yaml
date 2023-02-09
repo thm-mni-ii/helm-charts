@@ -1,0 +1,45 @@
+{{ if .Values.runner.sqlChecker.enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-sql-checker
+data:
+  mongoDatabase: {{ .Values.checkerMongodb.auth.database | quote }}
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: {{ .Release.Name }}-sql-checker
+data:
+  mongodbUri: {{ print "mongodb://" .Values.checkerMongodb.auth.username ":" .Values.checkerMongodb.auth.password "@" .Release.Name "-checker-mongodb" ":27017/" .Values.checkerMongodb.auth.database | b64enc }}
+{{ end }}
+{{ if .Values.core.config.ldap.enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-ldap
+data:
+  enabled: {{ .Values.core.config.ldap.enabled | quote }}
+  allowLogin: {{ .Values.core.config.ldap.allowLogin | quote }}
+  baseDn: {{ .Values.core.config.ldap.baseDn | quote }}
+  url: {{ .Values.core.config.ldap.url | quote }}
+  startTls: {{ .Values.core.config.ldap.startTls | quote }}
+  filter: {{ .Values.core.config.ldap.filter | quote }}
+  timeout: {{ .Values.core.config.ldap.timeout | quote }}
+  bind_enabled: {{ .Values.core.config.ldap.bind.enabled | quote }}
+  bind_dn: {{ .Values.core.config.ldap.bind.dn | quote }}
+  attribute_uid: {{ .Values.core.config.ldap.attributeNames.uid | quote }}
+  attribute_sn: {{ .Values.core.config.ldap.attributeNames.sn | quote }}
+  attribute_name: {{ .Values.core.config.ldap.attributeNames.name | quote }}
+  attribute_mail: {{ .Values.core.config.ldap.attributeNames.mail | quote }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-ldap
+data:
+  bind_password: {{ .Values.core.config.ldap.bind.password | b64enc | quote }}
+{{ end }}
