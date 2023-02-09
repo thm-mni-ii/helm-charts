@@ -95,6 +95,78 @@ spec:
           {{ end }}
           - name: SELF_URL
             value: https://{{ .Release.Name }}-core
+          {{ if .Values.core.config.ldap.enabled }}
+          - name: LDAP_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-ldap
+                key: enabled
+          - name: LDAP_ALLOW_LOGIN
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-ldap
+                key: allowLogin
+          - name: LDAP_BASE_DN
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-ldap
+                key: baseDn
+          - name: LDAP_URL
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-ldap
+                key: url
+          - name: LDAP_START_TLS
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-ldap
+                key: startTls
+          - name: LDAP_FILTER
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-ldap
+                key: filter
+          - name: LDAP_TIMEOUT
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-ldap
+                key: timeout
+          - name: LDAP_BIND_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-ldap
+                key: bind_enabled
+          - name: LDAP_BIND_DN
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-ldap
+                key: bind_dn
+          - name: LDAP_BIND_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-ldap
+                key: bind_password
+          - name: LDAP_ATTRIBUTE_NAMES_UID
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-ldap
+                key: attribute_uid
+          - name: LDAP_ATTRIBUTE_NAMES_SN
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-ldap
+                key: attribute_sn
+          - name: LDAP_ATTRIBUTE_NAMES_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-ldap
+                key: attribute_name
+          - name: LDAP_ATTRIBUTE_NAMES_MAIL
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-ldap
+                key: attribute_mail
+          {{ end }}
         resources:
           requests:
             cpu: {{ .Values.core.resources.cpu.request }}

@@ -44,6 +44,25 @@ There is a [Deno](https://deno.land) script to generate the configuration file f
 | core.enabled          | Should the Container be Enabled | true                             |
 | core.config.jwtSecret | The Used JWT Secret             | 2edb8793d987389e1626918e0ec1dbee |
 
+#### LDAP
+
+| Parameter                            | Description                                             | Default      |
+| ------------------------------------ | ------------------------------------------------------- | ------------ |
+| core.config.ldap.enabled             | Should ldap be enabled                                  | false        |
+| core.config.ldap.allowLogn           | Allow authentication using ldap                         | false        |
+| core.config.ldap.baseDn              | The base dn of the ldap server                          |              |
+| core.config.ldap.url                 | The url of the ldap server                              |              |
+| core.config.ldap.startTls            | Allow startTls when connecting to ldap                  |              |
+| core.config.ldap.filter              | The filter to use to locate a user in ldap              | (uid={user}) |
+| core.config.ldap.timeout             | The timeout for ldap requests                           | 5000         |
+| core.config.ldap.bind.enabled        | Use bind authentication for ldap queries                | false        |
+| core.config.ldap.bind.dn             | The dn to bind to                                       | ""           |
+| core.config.ldap.bind.password       | The password to bind to                                 | ""           |
+| core.config.ldap.attributeNames.uid  | The name of the ldap attribute to use as the user id    | uid          |
+| core.config.ldap.attributeNames.sn   | The name of the ldap attribute to use as the last name  | sn           |
+| core.config.ldap.attributeNames.name | The name of the ldap attribute to use as the first name | givenName    |
+| core.config.ldap.attributeNames.mail | The name of the ldap attribute to use as the user mail  | mail         |
+
 #### Runner
 
 | Parameter                                   | Description                                                                                           | Default |

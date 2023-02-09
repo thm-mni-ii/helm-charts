@@ -27,6 +27,23 @@ core:
       limit: "4Gi"
   config:
     jwtSecret: "2edb8793d987389e1626918e0ec1dbee"  # CHANGE ME
+    ldap:
+      enabled: false
+      allowLogin: false
+      baseDn: ""
+      url: ""
+      startTls: true
+      filter: "(uid={user})"
+      timeout: 5000
+      bind:
+        enabled: false
+        dn: ""
+        password: ""
+      attributeNames:
+        uid: "uid"
+        sn: "sn"
+        name: "givenName"
+        mail: "mail"
   ingress:
     enabled: true
 
