@@ -1,5 +1,9 @@
 {{- define "host" -}}
+{{- if or (and (eq .Values.common.config.protocol "https:") (ne (toString .Values.common.config.port) "443")) (and (eq .Values.common.config.protocol "http:") (ne (toString .Values.common.config.port) "80")) -}}
 {{ print .Values.common.config.protocol "//" .Values.common.config.hostname ":" .Values.common.config.port }}
+{{- else -}}
+{{ print .Values.common.config.protocol "//" .Values.common.config.hostname }}
+{{- end -}}
 {{- end -}}
 
 {{- define "fbs-core-image" -}}
