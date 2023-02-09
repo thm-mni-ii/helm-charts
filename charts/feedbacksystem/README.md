@@ -14,7 +14,7 @@ Official Helm Chart for Installing the [Feedbacksystem](https://github.com/thm-m
 ### Steps
 
 1. Ensure the requirements are met
-2. Generate values (See [here](#script) for details) `deno run --reload=https://raw.githubusercontent.com https://raw.githubusercontent.com/thm-mni-ii/helm-charts/main/charts/feedbacksystem/generate-values.ts --allow-write=vals.yaml vals.yaml`
+2. Generate values (See [here](#script) for details) `deno run --reload=https://raw.githubusercontent.com --allow-write=vals.yaml https://raw.githubusercontent.com/thm-mni-ii/helm-charts/main/charts/feedbacksystem/generate-values.ts vals.yaml`
 3. Add the helm repository `helm repo add thm-mni-ii https://thm-mni-ii.github.io/helm-charts`
 4. Install `helm install my-feedbacksystem thm-mni-ii/feedbacksystem`
 
