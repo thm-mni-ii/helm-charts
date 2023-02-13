@@ -44,7 +44,7 @@ core:
         sn: "sn"
         name: "givenName"
         mail: "mail"
-    digitalClassroom: # Overwritten if digitalClassroom.enabled
+    digitalClassroom:  # Overwritten if digitalClassroom.enabled
       url: "https://bbb.feedback.example.org"
       secret: "1234"
   ingress:
