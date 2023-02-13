@@ -44,6 +44,9 @@ core:
         sn: "sn"
         name: "givenName"
         mail: "mail"
+    digitalClassroom: # Overwritten if digitalClassroom.enabled
+      url: "https://bbb.feedback.example.org"
+      secret: "1234"
   ingress:
     enabled: true
 
@@ -89,7 +92,7 @@ runner:
         limit: "4Gi"
 
 digitalClassroom:
-  enabled: true
+  enabled: false
   image:
     registry: ghcr.io
     name: thm-mni-ii/digital-classroom
@@ -105,6 +108,7 @@ digitalClassroom:
   config:
     jwtSecret: "2edb8793d987389e1626918e0ec1dbee"  # CHANGE ME
     secret: "1f2a08f5dbd81580a6fb0f645dce3737"  # CHANGE ME
+    path: "/digitalclassroom"
     bbb:
       url: "https://bbb.example.org"
       secret: "1234"
@@ -116,7 +120,7 @@ mysql:
     password: fbs  # CHANGE ME
     rootPassword: root  # CHANGE ME
     createDatabase: true
-  primray:
+  primary:
     existingConfigmap: 'CHANGE-ME'
 
 runnerMysql:
@@ -126,7 +130,7 @@ runnerMysql:
     username: fbs
     password: fbs  # CHANGE ME
     rootPassword: root  # CHANGE ME
-  primray:
+  primary:
     existingConfigmap: 'CHANGE-ME'
 
 runnerPostgres:

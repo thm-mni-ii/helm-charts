@@ -13,3 +13,19 @@
 {{- define "fbs-runner-image" -}}
 {{ print .Values.runner.image.registry "/" .Values.runner.image.name ":" (default .Chart.AppVersion .Values.runner.image.tag) }}
 {{- end -}}
+
+{{- define "digital-classroom-url" -}}
+{{- if .Values.digitalClassroom.enabled -}}
+{{ print (include "host" .) .Values.digitalClassroom.config.path }}
+{{- else -}}
+{{ .Values.core.config.digitalClassroom.url }}
+{{- end -}}
+{{- end -}}
+
+{{- define "digital-classroom-secret" -}}
+{{- if .Values.digitalClassroom.enabled -}}
+{{ .Values.digitalClassroom.config.secret }}
+{{- else -}}
+{{ .Values.core.config.digitalClassroom.secret }}
+{{- end -}}
+{{- end -}}

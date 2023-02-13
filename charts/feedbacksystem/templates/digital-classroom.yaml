@@ -1,4 +1,21 @@
-{{ if and .Values.digitalClassroom.enabled }}
+{{ if and .Values.digitalClassroom.enabled .Values.digitalClassroom.internal }}
+apiVersion: v1
+kind: ConfigMap
+type: Opaque
+metadata:
+  name: {{ .Release.Name }}-digital-classroom
+data:
+  upstreamUrl: {{ .Values.digitalClassroom.config.bbb.url | quote }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-digital-classroom
+data:
+  jwtSecret: {{ .Values.digitalClassroom.config.jwtSecret | b64enc }}
+  secret:  {{ .Values.digitalClassroom.config.secret | b64enc }}
+  upstreamSecret: {{ .Values.digitalClassroom.config.bbb.secret | b64enc }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -57,23 +74,6 @@ spec:
           limits:
             cpu: {{ .Values.digitalClassroom.resources.cpu.limit }}
             memory: {{ .Values.digitalClassroom.resources.memory.limit }}
----
-apiVersion: v1
-kind: ConfigMap
-type: Opaque
-metadata:
-  name: {{ .Release.Name }}-digital-classroom
-data:
-  upstreamUrl: {{ .Values.digitalClassroom.config.bbb.url }}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: {{ .Release.Name }}-digital-classroom
-data:
-  jwtSecret: {{ .Values.digitalClassroom.config.jwtSecret | b64enc }}
-  secret:  {{ .Values.digitalClassroom.config.secret | b64enc }}
-  upstreamSecret: {{ .Values.digitalClassroom.config.bbb.secret | b64enc }}
 ---
 apiVersion: v1
 kind: Service

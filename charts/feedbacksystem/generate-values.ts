@@ -77,16 +77,23 @@ function buildValues(): any {
     },
   };
 
-  if (confirm("Enable digital classroom:")) {
-    values.digitalClassroom.enabled = true;
-    values.digitalClassroom.config = {
-      jwtSecret: randomHex(),
-      secret: randomHex(),
-      bbb: {
-        url: prompt("Enter BBB Url:"),
-        bbb: prompt("Enter BBB secret:"),
-      },
-    };
+  if (confirm("Configure digital classroom:")) {
+    const internal = confirm("Launch internal digital classroom:");
+    if (internal) {
+      values.digitalClassroom.config = {
+        jwtSecret: randomHex(),
+        secret: randomHex(),
+        bbb: {
+          url: prompt("Enter BBB Url:"),
+          secret: prompt("Enter BBB Secret:"),
+        },
+      };
+    } else {
+      values.core.config.digitalClassroom = {
+        url: prompt("Enter Classroom Url:"),
+        secret: prompt("Enter Classroom Secret:"),
+      };
+    }
   }
 
   return { namespace, name, values };
