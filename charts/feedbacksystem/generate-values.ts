@@ -36,17 +36,11 @@ function buildValues(): any {
         password: randomHex(),
         rootPassword: randomHex(),
       },
-      primary: {
-        existingConfigmap: `${name}-mysql-config`,
-      },
     },
     runnerMysql: {
       auth: {
         password: randomHex(),
         rootPassword: randomHex(),
-      },
-      primary: {
-        existingConfigmap: `${name}-mysql-config`,
       },
     },
     runnerPostgres: {

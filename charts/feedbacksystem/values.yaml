@@ -121,7 +121,7 @@ mysql:
     rootPassword: root  # CHANGE ME
     createDatabase: true
   primary:
-    existingConfigmap: 'CHANGE-ME'
+    existingConfigmap: '{{ .Release.Name }}-mysql-config'
 
 runnerMysql:
   nameOverride: runner-mysql
@@ -131,7 +131,7 @@ runnerMysql:
     password: fbs  # CHANGE ME
     rootPassword: root  # CHANGE ME
   primary:
-    existingConfigmap: 'CHANGE-ME'
+    existingConfigmap: '{{ .Release.Name }}-mysql-config'
 
 runnerPostgres:
   nameOverride: runner-postgres
