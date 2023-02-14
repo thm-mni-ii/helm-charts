@@ -63,6 +63,13 @@ There is a [Deno](https://deno.land) script to generate the configuration file f
 | core.config.ldap.attributeNames.name | The name of the ldap attribute to use as the first name | givenName    |
 | core.config.ldap.attributeNames.mail | The name of the ldap attribute to use as the user mail  | mail         |
 
+#### (External) Digital Classroom
+
+| Parameter                           | Description                                                                                   | Default                          |
+| ----------------------------------- | --------------------------------------------------------------------------------------------- | -------------------------------- |
+| core.config.digitalClassroom.url    | The URL of the external classroom to use (Overwritten if digitalClassroom.enabled)            | https://bbb.feedback.example.org |
+| core.config.digitalClassroom.secret | The secret of the external digital classroom to use (Overwritten if digitalClassroom.enabled) | 1234                             |
+
 #### Runner
 
 | Parameter                                   | Description                                                                                           | Default |
@@ -73,13 +80,14 @@ There is a [Deno](https://deno.land) script to generate the configuration file f
 
 #### Digital Classroom
 
-| Parameter                          | Description                                        | Default                          |
-| ---------------------------------- | -------------------------------------------------- | -------------------------------- |
-| digitalClassroom.enabled           | Should the Container be Enabled                    | true                             |
-| digitalClassroom.config.jwtSecret  | The Used JWT Secret for the Digital Classroom      | 2edb8793d987389e1626918e0ec1dbee |
-| digitalClassroom.config.secret     | Secret used to interact with the Digital Classroom | 1f2a08f5dbd81580a6fb0f645dce3737 |
-| digitalClassroom.config.bbb.url    | Url to the BigBlueButton Sever that should be used | https://bbb.example.org          |
-| digitalClassroom.config.bbb.secret | Secret for the Configured BigBlueButton Server     | 1234                             |
+| Parameter                          | Description                                                  | Default                          |
+| ---------------------------------- | ------------------------------------------------------------ | -------------------------------- |
+| digitalClassroom.enabled           | Should the Container be Enabled                              | false                            |
+| digitalClassroom.config.jwtSecret  | The Used JWT Secret for the Digital Classroom                | 2edb8793d987389e1626918e0ec1dbee |
+| digitalClassroom.config.secret     | Secret used to interact with the Digital Classroom           | 1f2a08f5dbd81580a6fb0f645dce3737 |
+| digitalClassroom.config.bbb.url    | URL to the BigBlueButton Sever that should be used           | https://bbb.example.org          |
+| digitalClassroom.config.bbb.secret | Secret for the Configured BigBlueButton Server               | 1234                             |
+| digitalClassroom.config.path       | The Path under which the digital classroom will be available | /digitalclassroom                |
 
 #### Mysql
 

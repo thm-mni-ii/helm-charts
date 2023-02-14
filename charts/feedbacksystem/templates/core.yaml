@@ -64,15 +64,16 @@ spec:
               secretKeyRef:
                 name: {{ .Release.Name }}-core
                 key: jwtSecret
-          {{ if .Values.digitalClassroom.enabled }}
           - name: CLASSROOM_URL
-            value: http://{{ .Release.Name }}-digital-classroom:8055
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-core
+                key: classroomUrl
           - name: CLASSROOM_SECRET
             valueFrom:
               secretKeyRef:
-                name: {{ .Release.Name }}-digital-classroom
-                key: secret
-          {{ end }}
+                name: {{ .Release.Name }}-core
+                key: classroomSecret
           - name: CLASSROOM_TLS_INSECURE
             value: "true"
           {{ if .Values.runner.enabled }}
@@ -192,9 +193,10 @@ kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-core
 data:
-  mysqlJdbclUri: {{ print "jdbc:mysql://" .Release.Name "-mysql" ":3306" }}
-  mysqlUser:  {{ .Values.mysql.auth.username }}
-  minioUrl: {{ print "http://" .Release.Name "-minio" }}
+  mysqlJdbclUri: {{ print "jdbc:mysql://" .Release.Name "-mysql" ":3306" | quote }}
+  mysqlUser:  {{ .Values.mysql.auth.username | quote }}
+  minioUrl: {{ print "http://" .Release.Name "-minio" | quote }}
+  classroomUrl: {{ include "digital-classroom-url" . | quote }}
 ---
 apiVersion: v1
 kind: Secret
@@ -202,8 +204,9 @@ type: Opaque
 metadata:
   name: {{ .Release.Name }}-core
 data:
-  jwtSecret: {{ .Values.core.config.jwtSecret | b64enc }}
-  mysqlPassword: {{ .Values.mysql.auth.password | b64enc }}
+  jwtSecret: {{ .Values.core.config.jwtSecret | b64enc | quote }}
+  mysqlPassword: {{ .Values.mysql.auth.password | b64enc | quote }}
+  classroomSecret: {{ include "digital-classroom-secret" . | b64enc | quote }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
