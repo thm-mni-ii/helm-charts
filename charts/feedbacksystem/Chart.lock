@@ -1,21 +1,21 @@
 dependencies:
 - name: mysql
   repository: https://charts.bitnami.com/bitnami
-  version: 9.5.1
+  version: 9.6.0
 - name: minio
   repository: https://charts.bitnami.com/bitnami
-  version: 12.1.10
+  version: 12.1.12
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
-  version: 12.2.2
+  version: 12.2.3
 - name: mysql
   repository: https://charts.bitnami.com/bitnami
-  version: 9.5.1
+  version: 9.6.0
 - name: mongodb
   repository: https://charts.bitnami.com/bitnami
-  version: 13.8.2
+  version: 13.9.1
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
-  version: 12.2.2
-digest: sha256:ad8ac0adf98f0f07442b809e86216e1fa4cb81dcb189e5d6b2606b3efc604f02
-generated: "2023-03-01T14:57:37.081792038Z"
+  version: 12.2.3
+digest: sha256:40f4e166d0042602da17db2a8d4708dbff7424757e30075bd231e548cb88c7d9
+generated: "2023-03-15T21:16:52.004150179Z"
