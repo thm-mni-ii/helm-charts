@@ -4,6 +4,54 @@ entries:
   - annotations:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
+    appVersion: v1.5.4
+    created: "2023-03-22T16:20:16.956661879Z"
+    dependencies:
+    - condition: core.enabled
+      name: mysql
+      repository: https://charts.bitnami.com/bitnami
+      version: 9.6.0
+    - condition: runner.enabled
+      name: minio
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.2.0
+    - alias: runnerPostgres
+      condition: runner.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.2.6
+    - alias: runnerMysql
+      condition: runner.enabled
+      name: mysql
+      repository: https://charts.bitnami.com/bitnami
+      version: 9.6.0
+    - alias: checkerMongodb
+      condition: sqlChecker.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 13.9.2
+    - alias: runnerPlaygroundPostgres
+      condition: runner.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.2.6
+    description: Intelligent, personalized feedback for students using artificial
+      intelligence
+    digest: aa3748b6ce4c91997ae28f23393eddf9e7804335933f7cbcb1f2df86c75f0e59
+    home: https://github.com/thm-mni-ii/feedbacksystem
+    icon: https://frits.mni.thm.de/img/hub/fbs-logo.png
+    maintainers:
+    - name: zitrone44
+    name: feedbacksystem
+    sources:
+    - https://github.com/thm-mni-ii/feedbacksystem
+    type: application
+    urls:
+    - https://github.com/thm-mni-ii/helm-charts/releases/download/feedbacksystem-0.13.0/feedbacksystem-0.13.0.tgz
+    version: 0.13.0
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
     appVersion: v1.5.3
     created: "2023-03-16T06:34:52.826022255Z"
     dependencies:
@@ -762,4 +810,4 @@ entries:
     urls:
     - https://github.com/thm-mni-ii/helm-charts/releases/download/feedbacksystem-0.4.0/feedbacksystem-0.4.0.tgz
     version: 0.4.0
-generated: "2023-03-16T06:34:52.826126757Z"
+generated: "2023-03-22T16:20:16.956784378Z"
