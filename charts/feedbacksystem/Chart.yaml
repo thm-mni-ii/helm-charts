@@ -6,35 +6,35 @@ sources:
   - https://github.com/thm-mni-ii/feedbacksystem
 home: https://github.com/thm-mni-ii/feedbacksystem
 type: application
-version: 0.14.0
+version: 0.15.0
 # renovate: image=thmmniii/fbs-core
 appVersion: v1.6.0
 dependencies:
   - name: mysql
-    version: 9.7.1
+    version: 9.9.0
     repository: 'https://charts.bitnami.com/bitnami'
     condition: core.enabled
   - name: minio
-    version: 12.2.5
+    version: 12.4.3
     repository: 'https://charts.bitnami.com/bitnami'
     condition: runner.enabled
   - name: postgresql
-    version: 12.2.7
+    version: 12.4.2
     repository: 'https://charts.bitnami.com/bitnami'
     condition: runner.enabled
     alias: runnerPostgres
   - name: mysql
-    version: 9.7.1
+    version: 9.9.0
     repository: 'https://charts.bitnami.com/bitnami'
     condition: runner.enabled
     alias: runnerMysql
   - name: mongodb
-    version: 13.9.4
+    version: 13.10.2
     repository: 'https://charts.bitnami.com/bitnami'
     condition: sqlChecker.enabled
     alias: checkerMongodb
   - name: postgresql
-    version: 12.2.7
+    version: 12.4.2
     repository: 'https://charts.bitnami.com/bitnami'
     condition: runner.enabled
     alias: runnerPlaygroundPostgres
