@@ -5,6 +5,54 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: v1.6.0
+    created: "2023-05-08T05:20:16.405616331Z"
+    dependencies:
+    - condition: core.enabled
+      name: mysql
+      repository: https://charts.bitnami.com/bitnami
+      version: 9.9.0
+    - condition: runner.enabled
+      name: minio
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.4.3
+    - alias: runnerPostgres
+      condition: runner.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.4.2
+    - alias: runnerMysql
+      condition: runner.enabled
+      name: mysql
+      repository: https://charts.bitnami.com/bitnami
+      version: 9.9.0
+    - alias: checkerMongodb
+      condition: sqlChecker.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 13.10.2
+    - alias: runnerPlaygroundPostgres
+      condition: runner.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.4.2
+    description: Intelligent, personalized feedback for students using artificial
+      intelligence
+    digest: fa4a560a5f1f27800ac67e7adce302d83834d7aeb9b833715ea402644956eeb0
+    home: https://github.com/thm-mni-ii/feedbacksystem
+    icon: https://frits.mni.thm.de/img/hub/fbs-logo.png
+    maintainers:
+    - name: zitrone44
+    name: feedbacksystem
+    sources:
+    - https://github.com/thm-mni-ii/feedbacksystem
+    type: application
+    urls:
+    - https://github.com/thm-mni-ii/helm-charts/releases/download/feedbacksystem-0.15.0/feedbacksystem-0.15.0.tgz
+    version: 0.15.0
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: v1.6.0
     created: "2023-04-14T17:11:02.687291746Z"
     dependencies:
     - condition: core.enabled
@@ -858,4 +906,4 @@ entries:
     urls:
     - https://github.com/thm-mni-ii/helm-charts/releases/download/feedbacksystem-0.4.0/feedbacksystem-0.4.0.tgz
     version: 0.4.0
-generated: "2023-04-14T17:11:02.687403046Z"
+generated: "2023-05-08T05:20:16.405891635Z"
