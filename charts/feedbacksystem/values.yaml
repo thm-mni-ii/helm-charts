@@ -47,8 +47,8 @@ core:
     digitalClassroom:  # Overwritten if digitalClassroom.enabled
       url: "https://bbb.feedback.example.org"
       secret: "1234"
-  ingress:
-    enabled: true
+  ingressRoute:
+    enabled: false
 
 runner:
   enabled: true
@@ -112,6 +112,25 @@ digitalClassroom:
     bbb:
       url: "https://bbb.example.org"
       secret: "1234"
+
+eat:
+  enabled: false
+  image:
+    registry: docker.io
+    name: thmmniii/fbs-eat
+    tag: ""
+    pullPolicy: "IfNotPresent"
+  resources:
+    cpu:
+      request: 0.1
+      limit: 2
+    memory:
+      request: "250Mi"
+      limit: "4Gi"
+  config:
+    sessionSecret: fbs  # CHANGE ME
+  ingressRoute:
+    enabled: false
 
 mysql:
   auth:

@@ -31,7 +31,7 @@ dependencies:
   - name: mongodb
     version: 13.13.0
     repository: 'https://charts.bitnami.com/bitnami'
-    condition: sqlChecker.enabled
+    condition: runner.sqlChecker.enabled
     alias: checkerMongodb
   - name: postgresql
     version: 12.5.2

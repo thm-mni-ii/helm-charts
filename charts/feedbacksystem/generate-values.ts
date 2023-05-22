@@ -26,6 +26,11 @@ function buildValues(): any {
         jwtSecret: randomHex(),
       },
     },
+    eat: {
+      config: {
+        sessionSecret: randomHex(),
+      },
+    },
     runner: {
       config: {
         hmacSecret: randomHex(),

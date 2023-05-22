@@ -14,6 +14,10 @@
 {{ print .Values.runner.image.registry "/" .Values.runner.image.name ":" (default .Chart.AppVersion .Values.runner.image.tag) }}
 {{- end -}}
 
+{{- define "fbs-eat-image" -}}
+{{ print .Values.eat.image.registry "/" .Values.eat.image.name ":" (default .Chart.AppVersion .Values.eat.image.tag) }}
+{{- end -}}
+
 {{- define "digital-classroom-url" -}}
 {{- if .Values.digitalClassroom.enabled -}}
 {{ print (include "host" .) .Values.digitalClassroom.config.path }}
