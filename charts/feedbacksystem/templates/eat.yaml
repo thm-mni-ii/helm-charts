@@ -24,6 +24,10 @@ spec:
         env:
           - name: URL_BASE_PATH
             value: /eat/
+          - name: FBS_BASE_URL
+            value: https://{{ .Release.Name }}-core
+          - name: FBS_TLS_NO_VERIFY
+            value: "true"
           - name: JWT_SECRET
             valueFrom:
               secretKeyRef:
@@ -76,6 +80,31 @@ spec:
 {{ if .Values.eat.ingressRoute.enabled }}
 ---
 apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ .Release.Name }}-eat-redirect
+spec:
+  redirectRegex:
+    regex: ^(.*)/eat$
+    replacement: ${1}/eat/
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ .Release.Name }}-eat-redirect
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`{{ .Values.common.config.hostname }}`) && Path(`/eat`)
+    kind: Rule
+    services:
+    - name: {{ .Release.Name }}-eat
+      port: 8050
+    middlewares:
+      - name: {{ .Release.Name }}-eat-redirect
+---
+apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: {{ .Release.Name }}-eat
@@ -83,7 +112,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-  - match: Host(`{{ .Values.common.config.hostname }}`) && PathPrefix(`/eat`)
+  - match: Host(`{{ .Values.common.config.hostname }}`) && PathPrefix(`/eat/`)
     kind: Rule
     services:
     - name: {{ .Release.Name }}-eat
