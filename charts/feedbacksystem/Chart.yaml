@@ -11,30 +11,30 @@ version: 0.20.0
 appVersion: v1.8.1
 dependencies:
   - name: mysql
-    version: 9.9.1
+    version: 9.10.4
     repository: 'https://charts.bitnami.com/bitnami'
     condition: core.enabled
   - name: minio
-    version: 12.6.0
+    version: 12.6.4
     repository: 'https://charts.bitnami.com/bitnami'
     condition: runner.enabled
   - name: postgresql
-    version: 12.5.2
+    version: 12.5.8
     repository: 'https://charts.bitnami.com/bitnami'
     condition: runner.enabled
     alias: runnerPostgres
   - name: mysql
-    version: 9.9.1
+    version: 9.10.4
     repository: 'https://charts.bitnami.com/bitnami'
     condition: runner.enabled
     alias: runnerMysql
   - name: mongodb
-    version: 13.13.0
+    version: 13.15.2
     repository: 'https://charts.bitnami.com/bitnami'
     condition: sqlChecker.enabled
     alias: checkerMongodb
   - name: postgresql
-    version: 12.5.2
+    version: 12.5.8
     repository: 'https://charts.bitnami.com/bitnami'
     condition: runner.enabled
     alias: runnerPlaygroundPostgres
