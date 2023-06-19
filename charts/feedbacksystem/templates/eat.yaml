@@ -1,0 +1,121 @@
+{{ if .Values.eat.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-eat
+  labels:
+    app: {{ .Release.Name }}-eat
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-eat
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-eat
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-eat
+        image: {{ include "fbs-eat-image" . }}
+        imagePullPolicy: {{ .Values.eat.image.pullPolicy }}
+        ports:
+        - containerPort: 8050
+          name: http
+        env:
+          - name: URL_BASE_PATH
+            value: /eat/
+          - name: FBS_BASE_URL
+            value: https://{{ .Release.Name }}-core
+          - name: FBS_TLS_NO_VERIFY
+            value: "true"
+          - name: JWT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-core
+                key: jwtSecret
+          - name: SERVER_SESSION_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-eat
+                key: sessionSecret
+          {{ if .Values.runner.sqlChecker.enabled }}
+          - name: MONGODB_URL
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-sql-checker
+                key: mongodbUri
+          {{ else }}
+            {{ fail "eat requires that the sql-checker is enabled" }}
+          {{ end }}
+        resources:
+          requests:
+            cpu: {{ .Values.eat.resources.cpu.request }}
+            memory: {{ .Values.eat.resources.memory.request }}
+          limits:
+            cpu: {{ .Values.eat.resources.cpu.limit }}
+            memory: {{ .Values.eat.resources.memory.limit }}
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: {{ .Release.Name }}-eat
+data:
+  sessionSecret: {{ .Values.eat.config.sessionSecret | b64enc | quote }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-eat
+  labels:
+    app: {{ .Release.Name }}-eat
+spec:
+  selector:
+    app: {{ .Release.Name }}-eat
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8050
+      targetPort: 8050
+{{ if .Values.eat.ingressRoute.enabled }}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ .Release.Name }}-eat-redirect
+spec:
+  redirectRegex:
+    regex: ^(.*)/eat$
+    replacement: ${1}/eat/
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ .Release.Name }}-eat-redirect
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`{{ .Values.common.config.hostname }}`) && Path(`/eat`)
+    kind: Rule
+    services:
+    - name: {{ .Release.Name }}-eat
+      port: 8050
+    middlewares:
+      - name: {{ .Release.Name }}-eat-redirect
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ .Release.Name }}-eat
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`{{ .Values.common.config.hostname }}`) && PathPrefix(`/eat/`)
+    kind: Rule
+    services:
+    - name: {{ .Release.Name }}-eat
+      port: 8050
+{{ end }}
+{{ end }}

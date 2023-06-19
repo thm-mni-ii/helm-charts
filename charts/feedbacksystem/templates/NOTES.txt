@@ -1,4 +1,4 @@
 Feedbackssystem deployed 🎉
-{{ if and .Values.core.enabled .Values.core.ingress.enabled }}
+{{ if and .Values.core.enabled .Values.core.ingressRoute.enabled }}
 You can reach it under {{ include "host" . }}
 {{ end }}

@@ -89,6 +89,14 @@ There is a [Deno](https://deno.land) script to generate the configuration file f
 | digitalClassroom.config.bbb.secret | Secret for the Configured BigBlueButton Server               | 1234                             |
 | digitalClassroom.config.path       | The Path under which the digital classroom will be available | /digitalclassroom                |
 
+#### Eat
+
+| Parameter                          | Description                                                  | Default                          |
+| ---------------------------------- | ------------------------------------------------------------ | -------------------------------- |
+| eat.enabled                        | Should the Container be Enabled                              | false                            |
+| eat.config.sessionSecret           | The session secret used for eat                              | fbs                              |
+| eat.ingressRoute.enabled           | Enable ingress for the eat                                   | false                            |
+
 #### Mysql
 
 | Parameter                       | Description                                         | Default   |

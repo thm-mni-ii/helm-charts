@@ -6,7 +6,7 @@ sources:
   - https://github.com/thm-mni-ii/feedbacksystem
 home: https://github.com/thm-mni-ii/feedbacksystem
 type: application
-version: 0.21.0
+version: 0.22.0
 # renovate: image=thmmniii/fbs-core
 appVersion: v1.8.1
 dependencies:
@@ -31,7 +31,7 @@ dependencies:
   - name: mongodb
     version: 13.15.2
     repository: 'https://charts.bitnami.com/bitnami'
-    condition: sqlChecker.enabled
+    condition: runner.sqlChecker.enabled
     alias: checkerMongodb
   - name: postgresql
     version: 12.5.8
