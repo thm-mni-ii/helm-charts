@@ -6,7 +6,7 @@ sources:
   - https://github.com/thm-mni-ii/feedbacksystem
 home: https://github.com/thm-mni-ii/feedbacksystem
 type: application
-version: 0.21.0
+version: 0.22.0
 # renovate: image=thmmniii/fbs-core
 appVersion: v1.8.1
 dependencies:
