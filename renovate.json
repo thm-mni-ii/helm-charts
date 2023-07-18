@@ -10,5 +10,11 @@
         "#\\s?renovate: image=(?<depName>.*?)\\s?appVersion:\\s?\\\"?(?<currentValue>[\\w+\\.\\-]*)\"?"
       ]
     }
+  ],
+  "packageRules": [
+    {
+      "extends": "group:allNonMajor",
+      "excludePackageNames": ["thmmniii/fbs-core"]
+    }
   ]
 }
