@@ -49,3 +49,13 @@ metadata:
 data:
   bind_password: {{ .Values.core.config.ldap.bind.password | b64enc | quote }}
 {{ end }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-anti-brute-force
+data:
+  trusted_proxy_count: {{ .Values.core.config.antiBruteForce.trustedProxyCount | quote }}
+  interval: {{ .Values.core.config.antiBruteForce.interval | quote }}
+  max_attempts: {{ .Values.core.config.antiBruteForce.maxAttempts | quote }}
+  allow_list: {{ .Values.core.config.antiBruteForce.allowList | join "," | quote }}
