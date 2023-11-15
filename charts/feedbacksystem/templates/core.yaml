@@ -186,6 +186,26 @@ spec:
                 name: {{ .Release.Name }}-ldap
                 key: attribute_mail
           {{ end }}
+          - name: TRUSTED_PROXIES
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-anti-brute-force
+                key: trusted_proxy_count
+          - name: BRUTEFORCE_INTERVAL
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-anti-brute-force
+                key: interval
+          - name: BRUTEFORCE_ATTEMPTS
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-anti-brute-force
+                key: max_attempts
+          - name: BRUTEFORCE_ALLOW_LIST
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-anti-brute-force
+                key: allow_list
         resources:
           requests:
             cpu: {{ .Values.core.resources.cpu.request }}

@@ -47,6 +47,11 @@ core:
     digitalClassroom:  # Overwritten if digitalClassroom.enabled
       url: "https://bbb.feedback.example.org"
       secret: "1234"
+    antiBruteForce:
+      trustedProxyCount: 0
+      interval: 600
+      maxAttempts: 10
+      allowList: []
   ingressRoute:
     enabled: false
 
