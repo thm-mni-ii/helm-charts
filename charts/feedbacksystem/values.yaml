@@ -52,6 +52,11 @@ core:
       interval: 600
       maxAttempts: 10
       allowList: []
+    sqlPlaygroundShare:
+      publicHost: "127.0.0.1"
+      publicPort: 4321
+    id:
+      salt: "fbs-helm-chart-salt"  # Change me if you want different ids
   ingressRoute:
     enabled: false
 
@@ -167,6 +172,14 @@ runnerPostgres:
 
 runnerPlaygroundPostgres:
   nameOverride: runner-playground-postgres
+  auth:
+    database: fbs
+    username: fbs
+    password: fbs  # CHANGE ME
+    postgresPassword: root  # CHANGE ME
+
+playgroundSharePostgres:
+  nameOverride: playground-share-postgres
   auth:
     database: fbs
     username: fbs

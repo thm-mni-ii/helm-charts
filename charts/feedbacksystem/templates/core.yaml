@@ -206,6 +206,21 @@ spec:
               configMapKeyRef:
                 name: {{ .Release.Name }}-anti-brute-force
                 key: allow_list
+          - name: SQL_PLAYGROUND_SHARE_PUBLIC_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-core
+                key: sqlPlaygroundSharePublicHost
+          - name: SQL_PLAYGROUND_SHARE_PUBLIC_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-core
+                key: sqlPlaygroundSharePublicPort
+          - name: ID_SALT
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-core
+                key: idSalt
         resources:
           requests:
             cpu: {{ .Values.core.resources.cpu.request }}
@@ -235,6 +250,9 @@ data:
   mysqlUser:  {{ .Values.mysql.auth.username | quote }}
   minioUrl: {{ print "http://" .Release.Name "-minio" | quote }}
   classroomUrl: {{ include "digital-classroom-url" . | quote }}
+  sqlPlaygroundSharePublicHost: {{ .Values.core.config.sqlPlaygroundShare.publicHost | quote }}
+  sqlPlaygroundSharePublicPort: {{ .Values.core.config.sqlPlaygroundShare.publicPort | quote }}
+  idSalt: {{ .Values.core.config.id.salt | quote }}
 ---
 apiVersion: v1
 kind: Secret

@@ -74,6 +74,12 @@ function buildValues(): any {
     digitalClassroom: {
       enabled: false,
     },
+    playgroundSharePostgres: {
+      auth: {
+        password: randomHex(),
+        postgresPassword: randomHex(),
+      },
+    },
   };
 
   if (confirm("Configure digital classroom:")) {
