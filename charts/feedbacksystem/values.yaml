@@ -56,7 +56,7 @@ core:
       publicHost: "127.0.0.1"
       publicPort: 4321
     id:
-      salt: "fbs-helm-chart-salt" # Change me if you want different ids
+      salt: "fbs-helm-chart-salt"  # Change me if you want different ids
   ingressRoute:
     enabled: false
 
