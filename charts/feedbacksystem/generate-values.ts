@@ -74,7 +74,7 @@ function buildValues(): any {
     digitalClassroom: {
       enabled: false,
     },
-    runnerPlaygroundSharePostgres: {
+    playgroundSharePostgres: {
       auth: {
         password: randomHex(),
         postgresPassword: randomHex(),

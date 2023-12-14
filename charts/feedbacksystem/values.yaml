@@ -178,8 +178,8 @@ runnerPlaygroundPostgres:
     password: fbs  # CHANGE ME
     postgresPassword: root  # CHANGE ME
 
-runnerPlaygroundSharePostgres:
-  nameOverride: runner-playground-share-postgres
+playgroundSharePostgres:
+  nameOverride: playground-share-postgres
   auth:
     database: fbs
     username: fbs

@@ -163,7 +163,7 @@ data:
   mysqlJdbclUri: {{ print "jdbc:mysql://" .Release.Name "-runner-mysql:3306?allowMultiQueries=true" }}
   psqlJdbclUri: {{ print "jdbc:postgresql://" .Release.Name "-runner-postgres:5432/?allowMultiQueries=true" }}
   playgroundPsqlJdbclUri: {{ print "jdbc:postgresql://" .Release.Name "-runner-playground-postgres:5432/?allowMultiQueries=true" }}
-  playgroundSharePsqlJdbclUri: {{ print "jdbc:postgresql://" .Release.Name "-runner-playground-share-postgres:5432/?allowMultiQueries=true" }}
+  playgroundSharePsqlJdbclUri: {{ print "jdbc:postgresql://" .Release.Name "-playground-share-postgres:5432/?allowMultiQueries=true" }}
   mysqlUsername: 'root'
   psqlUsername: 'postgres'
   playgroundPsqlUsername: 'postgres'
@@ -178,7 +178,7 @@ data:
   mysqlPassword: {{ .Values.runnerMysql.auth.rootPassword | b64enc }}
   psqlPassword: {{ .Values.runnerPostgres.auth.postgresPassword | b64enc }}
   playgroundPsqlPassword: {{ .Values.runnerPlaygroundPostgres.auth.postgresPassword | b64enc }}
-  playgroundSharePsqlPassword: {{ .Values.runnerPlaygroundSharePostgres.auth.postgresPassword | b64enc }}
+  playgroundSharePsqlPassword: {{ .Values.playgroundSharePostgres.auth.postgresPassword | b64enc }}
   hmacSecret: {{ .Values.runner.config.hmacSecret | b64enc }}
 ---
 apiVersion: v1

@@ -42,7 +42,7 @@ dependencies:
     version: 12.12.10
     repository: 'https://charts.bitnami.com/bitnami'
     condition: runner.enabled
-    alias: runnerPlaygroundSharePostgres
+    alias: playgroundSharePostgres
 maintainers:
   - name: zitrone44
 annotations:
