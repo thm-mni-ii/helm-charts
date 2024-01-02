@@ -8,7 +8,7 @@ home: https://github.com/thm-mni-ii/feedbacksystem
 type: application
 version: 0.33.0
 # renovate: image=thmmniii/fbs-core
-appVersion: v1.13.3
+appVersion: v1.14.0
 dependencies:
   - name: mysql
     version: 9.15.0
