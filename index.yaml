@@ -4,6 +4,59 @@ entries:
   - annotations:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
+    appVersion: v1.15.0
+    created: "2024-01-29T16:26:27.362179629Z"
+    dependencies:
+    - condition: core.enabled
+      name: mysql
+      repository: https://charts.bitnami.com/bitnami
+      version: 9.16.1
+    - condition: runner.enabled
+      name: minio
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.13.1
+    - alias: runnerPostgres
+      condition: runner.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.12.10
+    - alias: runnerMysql
+      condition: runner.enabled
+      name: mysql
+      repository: https://charts.bitnami.com/bitnami
+      version: 9.16.1
+    - alias: checkerMongodb
+      condition: runner.sqlChecker.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 13.18.5
+    - alias: runnerPlaygroundPostgres
+      condition: runner.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.12.10
+    - alias: playgroundSharePostgres
+      condition: runner.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.12.10
+    description: Intelligent, personalized feedback for students using artificial
+      intelligence
+    digest: 3dcd04f119552186ef0bf04cbe66d43475869e7e6c428e2106cc5d2196a9a755
+    home: https://github.com/thm-mni-ii/feedbacksystem
+    icon: https://frits.mni.thm.de/img/hub/fbs-logo.png
+    maintainers:
+    - name: zitrone44
+    name: feedbacksystem
+    sources:
+    - https://github.com/thm-mni-ii/feedbacksystem
+    type: application
+    urls:
+    - https://github.com/thm-mni-ii/helm-charts/releases/download/feedbacksystem-0.37.0/feedbacksystem-0.37.0.tgz
+    version: 0.37.0
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
     appVersion: v1.14.3
     created: "2024-01-12T14:19:01.799278988Z"
     dependencies:
@@ -2525,4 +2578,4 @@ entries:
     urls:
     - https://github.com/thm-mni-ii/helm-charts/releases/download/feedbacksystem-0.4.0/feedbacksystem-0.4.0.tgz
     version: 0.4.0
-generated: "2024-01-12T14:19:01.799456361Z"
+generated: "2024-01-29T16:26:27.362395324Z"
