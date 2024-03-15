@@ -6,7 +6,7 @@ sources:
   - https://github.com/thm-mni-ii/feedbacksystem
 home: https://github.com/thm-mni-ii/feedbacksystem
 type: application
-version: 0.37.0
+version: 0.38.0
 # renovate: image=thmmniii/fbs-core
 appVersion: v1.15.0
 dependencies:
@@ -15,7 +15,7 @@ dependencies:
     repository: 'https://charts.bitnami.com/bitnami'
     condition: core.enabled
   - name: minio
-    version: 12.13.1
+    version: 13.8.4
     repository: 'https://charts.bitnami.com/bitnami'
     condition: runner.enabled
   - name: postgresql
