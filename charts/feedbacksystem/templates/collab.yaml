@@ -1,0 +1,76 @@
+{{ if .Values.collab.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-collab
+  labels:
+    app: {{ .Release.Name }}-collab
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-collab
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-collab
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-collab
+        image: {{ include "fbs-collab-image" . }}
+        imagePullPolicy: {{ .Values.collab.image.pullPolicy }}
+        ports:
+        - containerPort: 8050
+          name: http
+        env:
+          - name: FBS_ROOT_URL
+            value: {{ include "host" . }}
+        resources:
+          requests:
+            cpu: {{ .Values.collab.resources.cpu.request }}
+            memory: {{ .Values.collab.resources.memory.request }}
+          limits:
+            cpu: {{ .Values.collab.resources.cpu.limit }}
+            memory: {{ .Values.collab.resources.memory.limit }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-collab
+  labels:
+    app: {{ .Release.Name }}-collab
+spec:
+  selector:
+    app: {{ .Release.Name }}-collab
+  ports:
+    - name: http
+      protocol: TCP
+      port: 1234
+      targetPort: 1234
+{{ if .Values.collab.ingressRoute.enabled }}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ .Release.Name }}-collab-strip-prefix
+spec:
+  stripPrefix:
+    prefixes:
+      - /collab
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ .Release.Name }}-collab
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`{{ .Values.common.config.hostname }}`) && Path(`/collab`)
+    kind: Rule
+    services:
+    - name: {{ .Release.Name }}-collab
+      port: 1234
+    middlewares:
+    - name: {{ .Release.Name }}-collab-strip-prefix
+{{ end }}
+{{ end }}

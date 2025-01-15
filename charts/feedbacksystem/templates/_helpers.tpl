@@ -18,6 +18,10 @@
 {{ print .Values.eat.image.registry "/" .Values.eat.image.name ":" (default .Chart.AppVersion .Values.eat.image.tag) }}
 {{- end -}}
 
+{{- define "fbs-collab-image" -}}
+{{ print .Values.collab.image.registry "/" .Values.collab.image.name ":" (default .Chart.AppVersion .Values.collab.image.tag) }}
+{{- end -}}
+
 {{- define "digital-classroom-url" -}}
 {{- if .Values.digitalClassroom.enabled -}}
 {{ print (include "host" .) .Values.digitalClassroom.config.path }}
