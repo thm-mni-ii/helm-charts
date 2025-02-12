@@ -57,6 +57,9 @@ core:
       publicPort: 4321
     id:
       salt: "fbs-helm-chart-salt"  # Change me if you want different ids
+    integrations:
+      modelling:
+        url: "https://fbs-modelling.mni.thm.de/"
   ingressRoute:
     enabled: false
 
