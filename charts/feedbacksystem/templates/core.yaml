@@ -221,6 +221,11 @@ spec:
               configMapKeyRef:
                 name: {{ .Release.Name }}-core
                 key: idSalt
+          - name: MODELLING_URL
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-integrations
+                key: modellingUrl
         resources:
           requests:
             cpu: {{ .Values.core.resources.cpu.request }}
