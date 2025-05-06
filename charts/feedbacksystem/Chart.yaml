@@ -43,6 +43,11 @@ dependencies:
     repository: 'https://charts.bitnami.com/bitnami'
     condition: runner.enabled
     alias: playgroundSharePostgres
+  - name: mongodb
+    version: 13.18.5
+    repository: 'https://charts.bitnami.com/bitnami'
+    condition: qcm.enabled
+    alias: qcmMongodb
 maintainers:
   - name: zitrone44
 annotations:

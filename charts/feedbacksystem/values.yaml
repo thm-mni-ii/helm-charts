@@ -162,6 +162,38 @@ collab:
   ingressRoute:
     enabled: false
 
+qcm:
+  enabled: true
+  backend:
+    image:
+      registry: docker.io
+      name: thmmniii/fbs-qcm-backend
+      tag: ""
+      pullPolicy: "IfNotPresent"
+    resources:
+      cpu:
+        request: 0.1
+        limit: 2
+      memory:
+        request: "50Mi"
+        limit: "1Gi"
+  enabled: true
+  frontend:
+    image:
+      registry: docker.io
+      name: thmmniii/fbs-qcm-frontend
+      tag: ""
+      pullPolicy: "IfNotPresent"
+    resources:
+      cpu:
+        request: 0.01
+        limit: 1
+      memory:
+        request: "50Mi"
+        limit: "1Gi"
+  ingressRoute:
+    enabled: false
+
 mysql:
   auth:
     database: fbs
@@ -208,6 +240,15 @@ playgroundSharePostgres:
 
 checkerMongodb:
   nameOverride: checker-mongodb
+  useStatefulSet: true
+  auth:
+    database: fbs
+    username: fbs
+    password: fbs  # CHANGE ME
+    rootPassword: root  # CHANGE ME
+
+qcmMongodb:
+  nameOverride: qcm-mongodb
   useStatefulSet: true
   auth:
     database: fbs

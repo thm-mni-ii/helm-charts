@@ -66,6 +66,12 @@ function buildValues(): any {
         rootPassword: randomHex(),
       },
     },
+    qcmMongodb: {
+      auth: {
+        password: randomHex(),
+        rootPassword: randomHex(),
+      },
+    },
     minio: {
       auth: {
         rootPassword: randomHex(),

@@ -1,0 +1,164 @@
+{{ if .Values.qcm.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-qcm-backend
+  labels:
+    app: {{ .Release.Name }}-qcm-backend
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-qcm-backend
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-qcm-backend
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-qcm-backend
+        image: {{ include "fbs-qcm-backend-image" . }}
+        imagePullPolicy: {{ .Values.qcm.backend.image.pullPolicy }}
+        ports:
+        - containerPort: 3000
+          name: http
+        env:
+          - name: FBS_BASE_URL
+            value: https://{{ .Release.Name }}-core
+          - name: FBS_TLS_NO_VERIFY
+            value: "true"
+          - name: JWT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-core
+                key: jwtSecret
+          - name: MONGODB_URL
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-qcm
+                key: mongodbUri
+          - name: NODE_ENV
+            value: production
+        resources:
+          requests:
+            cpu: {{ .Values.qcm.backend.resources.cpu.request }}
+            memory: {{ .Values.qcm.backend.resources.memory.request }}
+          limits:
+            cpu: {{ .Values.qcm.backend.resources.cpu.limit }}
+            memory: {{ .Values.qcm.backend.resources.memory.limit }}
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: {{ .Release.Name }}-qcm
+data:
+  mongodbUri: {{ print "mongodb://" .Values.qcmMongodb.auth.username ":" .Values.qcmMongodb.auth.password "@" .Release.Name "-checker-mongodb" ":27017/" .Values.qcmMongodb.auth.database | b64enc }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-qcm-backend
+  labels:
+    app: {{ .Release.Name }}-qcm-backend
+spec:
+  selector:
+    app: {{ .Release.Name }}-qcm-backend
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-qcm-frontend
+  labels:
+    app: {{ .Release.Name }}-qcm-frontend
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-qcm-frontend
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-qcm-frontend
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-frontend
+        image: {{ include "fbs-qcm-frontend-image" . }}
+        imagePullPolicy: {{ .Values.qcm.frontend.image.pullPolicy }}
+        ports:
+        - containerPort: 8086
+          name: http
+        env:
+          - name: CORE_URL
+            value: https://{{ .Release.Name }}-core
+          - name: BACKEND_URL
+            value: http://{{ .Release.Name }}-qcm-backend:3000
+          - name: NODE_ENV
+            value: production
+        resources:
+          requests:
+            cpu: {{ .Values.qcm.frontend.resources.cpu.request }}
+            memory: {{ .Values.qcm.frontend.resources.memory.request }}
+          limits:
+            cpu: {{ .Values.qcm.frontend.resources.cpu.limit }}
+            memory: {{ .Values.qcm.frontend.resources.memory.limit }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-qcm-frontend
+  labels:
+    app: {{ .Release.Name }}-qcm-frontend
+spec:
+  selector:
+    app: {{ .Release.Name }}-qcm-frontend
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8086
+      targetPort: 8086
+{{ if .Values.qcm.ingressRoute.enabled }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ .Release.Name }}-qcm-redirect
+spec:
+  redirectRegex:
+    regex: ^(.*)/questionary$
+    replacement: ${1}/questionary/
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ .Release.Name }}-qcm-redirect
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`{{ .Values.common.config.hostname }}`) && Path(`/questionary`)
+    kind: Rule
+    services:
+    - name: {{ .Release.Name }}-qcm-frontend
+      port: 8086
+    middlewares:
+      - name: {{ .Release.Name }}-qcm-redirect
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ .Release.Name }}-qcm-frontend
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`{{ .Values.common.config.hostname }}`) && PathPrefix(`/questionary/`)
+    kind: Rule
+    services:
+    - name: {{ .Release.Name }}-qcm-frontend
+      port: 8086
+{{ end }}
+{{ end }}
