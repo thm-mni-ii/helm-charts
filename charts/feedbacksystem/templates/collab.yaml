@@ -48,7 +48,7 @@ spec:
       targetPort: 1234
 {{ if .Values.collab.ingressRoute.enabled }}
 ---
-apiVersion: traefik.containo.us/v1alpha1
+apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: {{ .Release.Name }}-collab-strip-prefix
@@ -57,7 +57,7 @@ spec:
     prefixes:
       - /collab
 ---
-apiVersion: traefik.containo.us/v1alpha1
+apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: {{ .Release.Name }}-collab

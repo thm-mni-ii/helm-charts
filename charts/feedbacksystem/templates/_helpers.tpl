@@ -22,6 +22,14 @@
 {{ print .Values.collab.image.registry "/" .Values.collab.image.name ":" (default .Chart.AppVersion .Values.collab.image.tag) }}
 {{- end -}}
 
+{{- define "fbs-qcm-backend-image" -}}
+{{ print .Values.qcm.backend.image.registry "/" .Values.qcm.backend.image.name ":" (default .Chart.AppVersion .Values.qcm.backend.image.tag) }}
+{{- end -}}
+
+{{- define "fbs-qcm-frontend-image" -}}
+{{ print .Values.qcm.frontend.image.registry "/" .Values.qcm.frontend.image.name ":" (default .Chart.AppVersion .Values.qcm.frontend.image.tag) }}
+{{- end -}}
+
 {{- define "digital-classroom-url" -}}
 {{- if .Values.digitalClassroom.enabled -}}
 {{ print (include "host" .) .Values.digitalClassroom.config.path }}
