@@ -177,7 +177,6 @@ qcm:
       memory:
         request: "50Mi"
         limit: "1Gi"
-  enabled: true
   frontend:
     image:
       registry: docker.io
