@@ -4,6 +4,64 @@ entries:
   - annotations:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
+    appVersion: v1.24.2
+    created: "2025-05-17T10:49:46.135377231Z"
+    dependencies:
+    - condition: core.enabled
+      name: mysql
+      repository: https://charts.bitnami.com/bitnami
+      version: 9.16.1
+    - condition: runner.enabled
+      name: minio
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.13.1
+    - alias: runnerPostgres
+      condition: runner.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.12.10
+    - alias: runnerMysql
+      condition: runner.enabled
+      name: mysql
+      repository: https://charts.bitnami.com/bitnami
+      version: 9.16.1
+    - alias: checkerMongodb
+      condition: runner.sqlChecker.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 13.18.5
+    - alias: runnerPlaygroundPostgres
+      condition: runner.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.12.10
+    - alias: playgroundSharePostgres
+      condition: runner.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.12.10
+    - alias: qcmMongodb
+      condition: qcm.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 13.18.5
+    description: Intelligent, personalized feedback for students using artificial
+      intelligence
+    digest: fa598a8e73f8f2e7529329b0bc3b1a2a9fb91504f3e3b722c32214449db3a07d
+    home: https://github.com/thm-mni-ii/feedbacksystem
+    icon: https://frits.mni.thm.de/img/hub/fbs-logo.png
+    maintainers:
+    - name: zitrone44
+    name: feedbacksystem
+    sources:
+    - https://github.com/thm-mni-ii/feedbacksystem
+    type: application
+    urls:
+    - https://github.com/thm-mni-ii/helm-charts/releases/download/feedbacksystem-0.43.1/feedbacksystem-0.43.1.tgz
+    version: 0.43.1
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
     appVersion: v1.24.1
     created: "2025-05-14T06:42:58.338819177Z"
     dependencies:
@@ -2906,4 +2964,4 @@ entries:
     urls:
     - https://github.com/thm-mni-ii/helm-charts/releases/download/feedbacksystem-0.4.0/feedbacksystem-0.4.0.tgz
     version: 0.4.0
-generated: "2025-05-14T06:42:58.338991027Z"
+generated: "2025-05-17T10:49:46.135573667Z"
