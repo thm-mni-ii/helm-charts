@@ -279,7 +279,7 @@ data:
   jwtSecret: {{ .Values.core.config.jwtSecret | b64enc | quote }}
   mysqlPassword: {{ .Values.mysql.auth.password | b64enc | quote }}
   classroomSecret: {{ include "digital-classroom-secret" . | b64enc | quote }}
-  assaSecret: {{ .Values.core.config.assa.secret | b64enc | quote }}
+  assaToken: {{ .Values.core.config.assa.secret | b64enc | quote }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
