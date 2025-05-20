@@ -221,6 +221,16 @@ spec:
               configMapKeyRef:
                 name: {{ .Release.Name }}-core
                 key: idSalt
+          - name: ASSA_URL
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-core
+                key: assaUrl
+          - name: ASSA_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-core
+                key: assaToken
           - name: MODELLING_URL
             valueFrom:
               configMapKeyRef:
@@ -258,6 +268,7 @@ data:
   sqlPlaygroundSharePublicHost: {{ .Values.core.config.sqlPlaygroundShare.publicHost | quote }}
   sqlPlaygroundSharePublicPort: {{ .Values.core.config.sqlPlaygroundShare.publicPort | quote }}
   idSalt: {{ .Values.core.config.id.salt | quote }}
+  assaUrl: {{ .Values.core.config.assa.url | quote }}
 ---
 apiVersion: v1
 kind: Secret
@@ -268,6 +279,7 @@ data:
   jwtSecret: {{ .Values.core.config.jwtSecret | b64enc | quote }}
   mysqlPassword: {{ .Values.mysql.auth.password | b64enc | quote }}
   classroomSecret: {{ include "digital-classroom-secret" . | b64enc | quote }}
+  assaToken: {{ .Values.core.config.assa.secret | b64enc | quote }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
