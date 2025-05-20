@@ -223,12 +223,12 @@ spec:
                 key: idSalt
           - name: ASSA_URL
             valueFrom:
-              secretKeyRef:
+              configMapKeyRef:
                 name: {{ .Release.Name }}-core
                 key: assaUrl
           - name: ASSA_TOKEN
             valueFrom:
-              configMapKeyRef:
+              secretKeyRef:
                 name: {{ .Release.Name }}-core
                 key: assaToken
           - name: MODELLING_URL
