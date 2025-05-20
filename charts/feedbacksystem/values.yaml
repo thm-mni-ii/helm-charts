@@ -60,6 +60,9 @@ core:
     integrations:
       modelling:
         url: "https://fbs-modelling.mni.thm.de/"
+    assa:
+      url: ""
+      secret: ""
   ingressRoute:
     enabled: false
 
