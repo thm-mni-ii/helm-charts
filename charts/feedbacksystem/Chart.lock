@@ -4,7 +4,7 @@ dependencies:
   version: 9.16.1
 - name: minio
   repository: https://charts.bitnami.com/bitnami
-  version: 12.13.1
+  version: 17.0.6
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 12.12.10
@@ -23,5 +23,5 @@ dependencies:
 - name: mongodb
   repository: https://charts.bitnami.com/bitnami
   version: 13.18.5
-digest: sha256:6ddadc2ef766f9eccaf49f2b52dea69a4c10828a25d330a0eb3ac4a4ee6f3078
-generated: "2025-05-06T14:14:12.236453118+02:00"
+digest: sha256:2981f492400f9c5b2989afd2cd8425428d447c646e6acaa07b87cd16ec5e0886
+generated: "2025-06-19T17:00:41.617321032Z"
