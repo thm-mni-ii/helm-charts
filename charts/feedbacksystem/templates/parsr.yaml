@@ -1,0 +1,76 @@
+{{ if .Values.parsr.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-parsr
+  labels:
+    app: {{ .Release.Name }}-parsr
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-parsr
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-parsr
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-parsr
+        image: {{ include "parsr-image" . }}
+        imagePullPolicy: {{ .Values.parsr.image.pullPolicy }}
+        ports:
+        - containerPort: 3001
+          name: http
+        volumeMounts:
+        - name: parsr-output
+          mountPath: /usr/src/app/output
+        resources:
+          requests:
+            cpu: {{ .Values.parsr.resources.cpu.request }}
+            memory: {{ .Values.parsr.resources.memory.request }}
+          limits:
+            cpu: {{ .Values.parsr.resources.cpu.limit }}
+            memory: {{ .Values.parsr.resources.memory.limit }}
+      volumes:
+      - name: parsr-output
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-parsr-output
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-parsr-output
+  labels:
+    app: {{ .Release.Name }}-parsr
+spec:
+  accessModes:
+    - {{ .Values.parsr.volumes.output.mode }}
+  resources:
+    requests:
+      storage: {{ .Values.parsr.volumes.output.size }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-parsr
+  labels:
+    app: {{ .Release.Name }}-parsr
+spec:
+  selector:
+    app: {{ .Release.Name }}-parsr
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3002
+      targetPort: 3001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: parsr
+  labels:
+    app: {{ .Release.Name }}-parsr
+spec:
+  type: ExternalName
+  externalName: {{ .Release.Name }}-parsr.{{ .Release.Namespace }}.svc.cluster.local
+{{ end }}
