@@ -112,6 +112,13 @@ spec:
                 name: {{ .Release.Name }}-sql-checker
                 key: mongoDatabase
           {{ end }}
+          - name: MONGODB_PLAYGROUND_URI
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-playground-mongodb
+                key: mongodbUri
+          - name: MONGODB_PLAYGROUND_DATABASE
+            value: playground-db
           - name: SELF_URL
             value: https://{{ .Release.Name }}-core
           {{ if .Values.core.config.ldap.enabled }}

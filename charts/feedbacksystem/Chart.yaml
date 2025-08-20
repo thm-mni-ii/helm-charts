@@ -48,6 +48,11 @@ dependencies:
     repository: 'https://charts.bitnami.com/bitnami'
     condition: qcm.enabled
     alias: qcmMongodb
+  - name: mongodb
+    version: 13.18.5
+    repository: 'https://charts.bitnami.com/bitnami'
+    condition: runner.enabled
+    alias: playgroundMongodb
 maintainers:
   - name: zitrone44
 annotations:

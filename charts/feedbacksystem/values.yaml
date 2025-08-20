@@ -258,6 +258,15 @@ qcmMongodb:
     password: fbs  # CHANGE ME
     rootPassword: root  # CHANGE ME
 
+playgroundMongodb:
+  nameOverride: mongodb-playground
+  useStatefulSet: true
+  auth:
+    database: playground-db
+    username: fbs
+    password: fbs  # CHANGE ME
+    rootPassword: root  # CHANGE ME
+
 minio:
   auth:
     rootPassword: fbs-12345678  # CHANGE ME

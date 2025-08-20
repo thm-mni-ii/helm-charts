@@ -72,6 +72,12 @@ function buildValues(): any {
         rootPassword: randomHex(),
       },
     },
+    playgroundMongodb: {
+      auth: {
+        password: randomHex(),
+        rootPassword: randomHex(),
+      },
+    },
     minio: {
       auth: {
         rootPassword: randomHex(),
