@@ -6,9 +6,9 @@ sources:
   - https://github.com/thm-mni-ii/feedbacksystem
 home: https://github.com/thm-mni-ii/feedbacksystem
 type: application
-version: 0.44.2
+version: 0.45.0
 # renovate: image=thmmniii/fbs-core
-appVersion: v1.25.2
+appVersion: v1.26.0
 dependencies:
   - name: mysql
     version: 9.16.1
@@ -48,6 +48,11 @@ dependencies:
     repository: 'https://charts.bitnami.com/bitnami'
     condition: qcm.enabled
     alias: qcmMongodb
+  - name: mongodb
+    version: 13.18.5
+    repository: 'https://charts.bitnami.com/bitnami'
+    condition: runner.enabled
+    alias: playgroundMongodb
 maintainers:
   - name: zitrone44
 annotations:
