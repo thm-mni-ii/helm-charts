@@ -30,6 +30,10 @@
 {{ print .Values.qcm.frontend.image.registry "/" .Values.qcm.frontend.image.name ":" (default .Chart.AppVersion .Values.qcm.frontend.image.tag) }}
 {{- end -}}
 
+{{- define "parsr-image" -}}
+{{ print .Values.parsr.image.registry "/" .Values.parsr.image.name ":" .Values.parsr.image.tag }}
+{{- end -}}
+
 {{- define "digital-classroom-url" -}}
 {{- if .Values.digitalClassroom.enabled -}}
 {{ print (include "host" .) .Values.digitalClassroom.config.path }}

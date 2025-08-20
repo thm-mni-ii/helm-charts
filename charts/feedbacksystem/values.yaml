@@ -267,6 +267,25 @@ playgroundMongodb:
     password: fbs  # CHANGE ME
     rootPassword: root  # CHANGE ME
 
+parsr:
+  enabled: false
+  image:
+    registry: docker.io
+    name: axarev/parsr
+    tag: "latest"
+    pullPolicy: "IfNotPresent"
+  resources:
+    cpu:
+      request: 0.1
+      limit: 2
+    memory:
+      request: "250Mi"
+      limit: "4Gi"
+  volumes:
+    output:
+      size: "8G"
+      mode: "ReadWriteOnce"
+
 minio:
   auth:
     rootPassword: fbs-12345678  # CHANGE ME
