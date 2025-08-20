@@ -28,7 +28,7 @@ type: Opaque
 metadata:
   name: {{ .Release.Name }}-playground-mongodb
 data:
-  mongodbUri: {{ print "mongodb://" .Values.playgroundMongodb.auth.username ":" .Values.playgroundMongodb.auth.password "@" .Release.Name "-mongodb-playground" ":27017" | b64enc }}
+  mongodbUri: {{ print "mongodb://" "root" ":" .Values.playgroundMongodb.auth.rootPassword "@" .Release.Name "-mongodb-playground" ":27017" | b64enc }}
 {{ if .Values.core.config.ldap.enabled }}
 ---
 apiVersion: v1
