@@ -117,8 +117,11 @@ spec:
               secretKeyRef:
                 name: {{ .Release.Name }}-playground-mongodb
                 key: mongodbUri
-          - name: MONGODB_PLAYGROUND_DATABASE
-            value: playground-db
+          - name: MONGODB_PLAYGROUND_AUTH_SOURCE
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-playground-mongodb
+                key: authSource
           - name: SELF_URL
             value: https://{{ .Release.Name }}-core
           {{ if .Values.core.config.ldap.enabled }}
