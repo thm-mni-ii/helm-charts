@@ -63,6 +63,10 @@ core:
     assa:
       url: ""
       secret: ""
+    sqlRunner:
+      url: "" 
+      insecure: false 
+      secret: "" 
   ingressRoute:
     enabled: false
 
