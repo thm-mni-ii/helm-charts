@@ -246,11 +246,11 @@ spec:
               configMapKeyRef:
                 name: {{ .Release.Name }}-core
                 key: sqlRunnerUrl
-          - name: SQL_RUNNER_SECRET
+          - name: SQL_RUNNER_SHARED_SECRET
             valueFrom:
               secretKeyRef:
                 name: {{ .Release.Name }}-core
-                key: sqlRunnerSecret
+                key: sqlRunnerSharedSecret
           - name: SQL_RUNNER_INSECURE
             value: {{ .Values.core.config.sqlRunner.insecure | quote }}
           - name: MODELLING_URL
@@ -303,7 +303,7 @@ data:
   mysqlPassword: {{ .Values.mysql.auth.password | b64enc | quote }}
   classroomSecret: {{ include "digital-classroom-secret" . | b64enc | quote }}
   assaToken: {{ .Values.core.config.assa.secret | b64enc | quote }}
-  sqlRunnerSecret: {{ .Values.core.config.sqlRunner.secret | b64enc | quote }}
+  sqlRunnerSharedSecret: {{ .Values.core.config.sqlRunner.sharedSecret | b64enc | quote }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
