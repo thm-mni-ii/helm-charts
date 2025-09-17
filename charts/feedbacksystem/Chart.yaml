@@ -18,7 +18,7 @@ dependencies:
     version: 12.13.1
     repository: 'https://charts.bitnami.com/bitnami'
     condition: runner.enabled
-  - name: postgres
+  - name: postgresql
     version: 12.12.10
     repository: 'https://charts.bitnami.com/bitnami'
     condition: runner.enabled
@@ -33,12 +33,12 @@ dependencies:
     repository: 'https://charts.bitnami.com/bitnami'
     condition: runner.sqlChecker.enabled
     alias: checkerMongodb
-  - name: postgres
+  - name: postgresql
     version: 12.12.10
     repository: 'https://charts.bitnami.com/bitnami'
     condition: runner.enabled
     alias: runnerPlaygroundPostgres
-  - name: postgres
+  - name: postgresql
     version: 12.12.10
     repository: 'https://charts.bitnami.com/bitnami'
     condition: runner.enabled
