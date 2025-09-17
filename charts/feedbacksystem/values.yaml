@@ -64,9 +64,9 @@ core:
       url: ""
       secret: ""
     sqlRunner:
-      url: "" 
-      insecure: false 
-      sharedSecret: "" 
+      url: ""
+      insecure: false
+      sharedSecret: ""
   ingressRoute:
     enabled: false
 
