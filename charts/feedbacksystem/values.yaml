@@ -307,5 +307,7 @@ parsr:
       mode: "ReadWriteOnce"
 
 minio:
+  image:
+    repository: bitnamilegacy/minio
   auth:
     rootPassword: fbs-12345678  # CHANGE ME
