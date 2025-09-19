@@ -6,7 +6,7 @@ sources:
   - https://github.com/thm-mni-ii/feedbacksystem
 home: https://github.com/thm-mni-ii/feedbacksystem
 type: application
-version: 0.47.1
+version: 0.48.0
 # renovate: image=thmmniii/fbs-core
 appVersion: v1.27.1
 dependencies:
@@ -29,7 +29,7 @@ dependencies:
     condition: runner.enabled
     alias: runnerMysql
   - name: mongodb
-    version: 13.18.5
+    version: 16.5.45
     repository: 'https://charts.bitnami.com/bitnami'
     condition: runner.sqlChecker.enabled
     alias: checkerMongodb
@@ -44,12 +44,12 @@ dependencies:
     condition: runner.enabled
     alias: playgroundSharePostgres
   - name: mongodb
-    version: 13.18.5
+    version: 16.5.45
     repository: 'https://charts.bitnami.com/bitnami'
     condition: qcm.enabled
     alias: qcmMongodb
   - name: mongodb
-    version: 13.18.5
+    version: 16.5.45
     repository: 'https://charts.bitnami.com/bitnami'
     condition: runner.enabled
     alias: playgroundMongodb
