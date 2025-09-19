@@ -63,6 +63,10 @@ core:
     assa:
       url: ""
       secret: ""
+    sqlRunner:
+      url: ""
+      insecure: false
+      sharedSecret: ""
   ingressRoute:
     enabled: false
 
@@ -197,6 +201,8 @@ qcm:
     enabled: false
 
 mysql:
+  image:
+    repository: bitnamilegacy/mysql
   auth:
     database: fbs
     username: fbs
@@ -208,6 +214,8 @@ mysql:
 
 runnerMysql:
   nameOverride: runner-mysql
+  image:
+    repository: bitnamilegacy/mysql
   auth:
     database: fbs
     username: fbs
@@ -218,6 +226,8 @@ runnerMysql:
 
 runnerPostgres:
   nameOverride: runner-postgres
+  image:
+    repository: bitnamilegacy/postgresql
   auth:
     database: fbs
     username: fbs
@@ -226,6 +236,8 @@ runnerPostgres:
 
 runnerPlaygroundPostgres:
   nameOverride: runner-playground-postgres
+  image:
+    repository: bitnamilegacy/postgresql
   auth:
     database: fbs
     username: fbs
@@ -234,6 +246,8 @@ runnerPlaygroundPostgres:
 
 playgroundSharePostgres:
   nameOverride: playground-share-postgres
+  image:
+    repository: bitnamilegacy/postgresql
   auth:
     database: fbs
     username: fbs
@@ -242,6 +256,8 @@ playgroundSharePostgres:
 
 checkerMongodb:
   nameOverride: checker-mongodb
+  image:
+    repository: bitnamilegacy/mongodb
   useStatefulSet: true
   auth:
     database: fbs
@@ -251,6 +267,8 @@ checkerMongodb:
 
 qcmMongodb:
   nameOverride: qcm-mongodb
+  image:
+    repository: bitnamilegacy/mongodb
   useStatefulSet: true
   auth:
     database: fbs
@@ -260,6 +278,8 @@ qcmMongodb:
 
 playgroundMongodb:
   nameOverride: mongodb-playground
+  image:
+    repository: bitnamilegacy/mongodb
   useStatefulSet: true
   auth:
     database: playground-db
@@ -287,5 +307,7 @@ parsr:
       mode: "ReadWriteOnce"
 
 minio:
+  image:
+    repository: bitnamilegacy/minio
   auth:
     rootPassword: fbs-12345678  # CHANGE ME
