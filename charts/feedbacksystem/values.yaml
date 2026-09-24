@@ -4,11 +4,169 @@ common:
     hostname: feedback.example.org
     port: 443
 
+webShell:
+  enabled: true
+  image:
+    registry: ghcr.io
+    name: thm-mni-ii/fbs-web-shell
+    tag: ""
+    pullPolicy: "IfNotPresent"
+  resources:
+    cpu:
+      request: 0.01
+      limit: 1
+    memory:
+      request: "50Mi"
+      limit: "500Mi"
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    hosts: []
+    #   - host: feedback.example.org
+    #     paths:
+    #       - path: /
+    #         pathType: Prefix
+    tls: []
+    #   - secretName: feedback-tls
+    #     hosts:
+    #       - feedback.example.org
+  ingressRoute:
+    enabled: false
+
+identity:
+  enabled: true
+  image:
+    registry: ghcr.io
+    name: thm-mni-ii/fbs-identity-service
+    tag: ""
+    pullPolicy: "IfNotPresent"
+  resources:
+    cpu:
+      request: 0.1
+      limit: 2
+    memory:
+      request: "250Mi"
+      limit: "4Gi"
+  config:
+    saml:
+      enabled: false
+      registrationId: "keycloak" # e.g. "thm" or "keycloak"
+      idpMetadataUri: "" # e.g. "https://idp.thm.de/idp/shibboleth"
+      idpEntityId: ""
+      idpSsoUrl: ""
+      spEntityId: "" # Defaults to https://<host>/saml2/metadata/<registrationId> if empty
+      principalAttribute: "uid"
+      prenameAttribute: "givenName"
+      surnameAttribute: "sn"
+      emailAttribute: "mail"
+      signRequest: false
+    oidc:
+      issuer: ""  # Overwritten with common host if empty
+      jwkSetUri: ""  # Overwritten with internal identity service endpoint if empty
+      clientId: "fbs-web-shell,fbs-test-client"
+      redirectUris: []
+      postLogoutRedirectUris: []
+      accessTokenTtlMinutes: 15
+      authCodeTtlMinutes: 5
+    signingKey:
+      existingSecret: ""  # Name of existing secret containing identity-signing-key.p12
+      secretKey: "identity-signing-key.p12"
+      keystore: ""  # Base64 encoded .p12 keystore file if not using existingSecret
+      storePassword: "changeit"  # CHANGE ME
+      alias: "identity-signing"
+      keyPassword: "changeit"  # CHANGE ME
+    antiBruteForce:
+      maxFailuresPerIp: 150
+      maxFailuresPerIpUser: 15
+      windowSeconds: 600
+      trustedProxies: 0
+      allowList: []
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    hosts: []
+    #   - host: feedback.example.org
+    #     paths:
+    #       - path: /oauth2
+    #         pathType: Prefix
+    tls: []
+    #   - secretName: feedback-tls
+    #     hosts:
+    #       - feedback.example.org
+  ingressRoute:
+    enabled: false
+
+courseManagementWeb:
+  enabled: true
+  image:
+    registry: ghcr.io
+    name: thm-mni-ii/fbs-core-web
+    tag: ""
+    pullPolicy: "IfNotPresent"
+  resources:
+    cpu:
+      request: 0.01
+      limit: 1
+    memory:
+      request: "50Mi"
+      limit: "500Mi"
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    pathPrefix: "/course-management"
+    hosts: []
+    #   - host: feedback.example.org
+    #     paths:
+    #       - path: /course-management
+    #         pathType: Prefix
+    tls: []
+    #   - secretName: feedback-tls
+    #     hosts:
+    #       - feedback.example.org
+  ingressRoute:
+    enabled: false
+    pathPrefix: "/course-management"
+
+sqlPlaygroundWeb:
+  enabled: true
+  image:
+    registry: ghcr.io
+    name: thm-mni-ii/fbs-sql-playground-web
+    tag: ""
+    pullPolicy: "IfNotPresent"
+  resources:
+    cpu:
+      request: 0.01
+      limit: 1
+    memory:
+      request: "50Mi"
+      limit: "500Mi"
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    pathPrefix: "/sql-playground"
+    hosts: []
+    #   - host: feedback.example.org
+    #     paths:
+    #       - path: /sql-playground
+    #         pathType: Prefix
+    tls: []
+    #   - secretName: feedback-tls
+    #     hosts:
+    #       - feedback.example.org
+  ingressRoute:
+    enabled: false
+    pathPrefix: "/sql-playground"
+
 core:
   enabled: true
   image:
-    registry: docker.io
-    name: thmmniii/fbs-core
+    registry: ghcr.io
+    name: thm-mni-ii/fbs-core
     tag: ""
     pullPolicy: "IfNotPresent"
   volumes:
@@ -25,6 +183,17 @@ core:
     memory:
       request: "250Mi"
       limit: "4Gi"
+  probes:
+    readiness:
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
+    liveness:
+      initialDelaySeconds: 60
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 6
   config:
     jwtSecret: "2edb8793d987389e1626918e0ec1dbee"  # CHANGE ME
     ldap:
@@ -67,14 +236,30 @@ core:
       url: ""
       insecure: false
       sharedSecret: ""
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    servicePort: 443
+    hosts: []
+    #   - host: feedback.example.org
+    #     paths:
+    #       - path: /api/v1
+    #         pathType: Prefix
+    #       - path: /results
+    #         pathType: Prefix
+    tls: []
+    #   - secretName: feedback-tls
+    #     hosts:
+    #       - feedback.example.org
   ingressRoute:
     enabled: false
 
 runner:
   enabled: true
   image:
-    registry: docker.io
-    name: thmmniii/fbs-runner
+    registry: ghcr.io
+    name: thm-mni-ii/fbs-runner
     tag: ""
     pullPolicy: "IfNotPresent"
   resources:
@@ -90,9 +275,9 @@ runner:
       disableContainerRemoval: false
   sqlChecker:
     enabled: true
-    image: "thmmniii/fbs-sql-checker:latest"
+    image: "ghcr.io/thm-mni-ii/fbs-sql-checker:latest"
   bashChecker:
-    image: "thmmniii/fbs-runtime-bash:latest"
+    image: "ghcr.io/thm-mni-ii/fbs-runtime-bash:latest"
   dink:
     image:
       registry: docker.io
@@ -136,8 +321,8 @@ digitalClassroom:
 eat:
   enabled: false
   image:
-    registry: docker.io
-    name: thmmniii/fbs-eat
+    registry: ghcr.io
+    name: thm-mni-ii/fbs-eat
     tag: ""
     pullPolicy: "IfNotPresent"
   resources:
@@ -149,14 +334,27 @@ eat:
       limit: "4Gi"
   config:
     sessionSecret: fbs  # CHANGE ME
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    hosts: []
+    #   - host: feedback.example.org
+    #     paths:
+    #       - path: /eat
+    #         pathType: Prefix
+    tls: []
+    #   - secretName: feedback-tls
+    #     hosts:
+    #       - feedback.example.org
   ingressRoute:
     enabled: false
 
 collab:
   enabled: true
   image:
-    registry: docker.io
-    name: thmmniii/fbs-collab
+    registry: ghcr.io
+    name: thm-mni-ii/fbs-collab
     tag: ""
     pullPolicy: "IfNotPresent"
   resources:
@@ -166,6 +364,19 @@ collab:
     memory:
       request: "50Mi"
       limit: "1Gi"
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    hosts: []
+    #   - host: feedback.example.org
+    #     paths:
+    #       - path: /collab
+    #         pathType: Prefix
+    tls: []
+    #   - secretName: feedback-tls
+    #     hosts:
+    #       - feedback.example.org
   ingressRoute:
     enabled: false
 
@@ -173,8 +384,8 @@ qcm:
   enabled: true
   backend:
     image:
-      registry: docker.io
-      name: thmmniii/fbs-qcm-backend
+      registry: ghcr.io
+      name: thm-mni-ii/fbs-qcm-backend
       tag: ""
       pullPolicy: "IfNotPresent"
     resources:
@@ -186,8 +397,8 @@ qcm:
         limit: "1Gi"
   frontend:
     image:
-      registry: docker.io
-      name: thmmniii/fbs-qcm-frontend
+      registry: ghcr.io
+      name: thm-mni-ii/fbs-qcm-frontend
       tag: ""
       pullPolicy: "IfNotPresent"
     resources:
@@ -197,6 +408,24 @@ qcm:
       memory:
         request: "50Mi"
         limit: "1Gi"
+    config:
+      backendUrl: ""
+      coreUrl: ""
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    hosts: []
+    #   - host: feedback.example.org
+    #     paths:
+    #       - path: /questionary
+    #         pathType: Prefix
+    #       - path: /questionary/api_v1
+    #         pathType: Prefix
+    tls: []
+    #   - secretName: feedback-tls
+    #     hosts:
+    #       - feedback.example.org
   ingressRoute:
     enabled: false
 
@@ -209,6 +438,7 @@ mysql:
     password: fbs  # CHANGE ME
     rootPassword: root  # CHANGE ME
     createDatabase: true
+  initdbScriptsConfigMap: '{{ .Release.Name }}-mysql-init-scripts'
   primary:
     existingConfigmap: '{{ .Release.Name }}-mysql-config'
 

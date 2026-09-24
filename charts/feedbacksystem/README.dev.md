@@ -15,5 +15,6 @@ Instructions to run this Helm Chart locally to test and develop it. A production
 2. Start minikube `minikube start --driver=docker`
 3. Generate values `deno run --reload=https://raw.githubusercontent.com https://raw.githubusercontent.com/thm-mni-ii/helm-charts/main/charts/feedbacksystem/generate-values.ts --allow-write=vals.yaml vals.yaml`
 4. Install `helm install -n <namepsace> --create-namespace --wait -f vals.yaml fbs .`
-5. Forward FBS `kubectl -n <namespace> port-forward services/fbs-core 8443:443`
-6. Acess https://localhost:8443
+5. Forward FBS Web Shell: `kubectl -n <namespace> port-forward services/fbs-web-shell 8083:80`
+6. Access http://localhost:8083
+7. Bootstrap initial admin account (see [README.md](README.md) for details)

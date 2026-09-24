@@ -1,0 +1,498 @@
+{{ if .Values.identity.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-identity-service
+  labels:
+    app: {{ .Release.Name }}-identity-service
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-identity-service
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-identity-service
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-identity-service
+        image: {{ include "fbs-identity-image" . }}
+        imagePullPolicy: {{ .Values.identity.image.pullPolicy }}
+        ports:
+        - containerPort: 8080
+          name: http
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 6
+        env:
+          - name: MYSQL_URI
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: mysqlJdbcUri
+          - name: MYSQL_USER
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: mysqlUser
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: mysqlPassword
+          - name: FRONTEND_BASE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-common
+                key: host
+          - name: APP_SAML_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: samlEnabled
+          - name: APP_SAML_REGISTRATION_ID
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: samlRegistrationId
+          - name: APP_SAML_PRINCIPAL_ATTRIBUTE
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: samlPrincipalAttribute
+          - name: APP_SAML_PRENAME_ATTRIBUTE
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: samlPrenameAttribute
+          - name: APP_SAML_SURNAME_ATTRIBUTE
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: samlSurnameAttribute
+          - name: APP_SAML_EMAIL_ATTRIBUTE
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: samlEmailAttribute
+          - name: SAML_IDP_METADATA_URI
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: samlIdpMetadataUri
+          - name: SAML_SP_ENTITY_ID
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: samlSpEntityId
+          {{ if .Values.identity.config.saml.enabled }}
+          - name: {{ print "SPRING_SECURITY_SAML2_RELYINGPARTY_REGISTRATION_" (upper (default "keycloak" .Values.identity.config.saml.registrationId)) "_ENTITY_ID" }}
+            value: {{ .Values.identity.config.saml.spEntityId | default (print (include "host" .) "/saml2/metadata/" (default "keycloak" .Values.identity.config.saml.registrationId)) | quote }}
+          {{ if .Values.identity.config.saml.idpMetadataUri }}
+          - name: {{ print "SPRING_SECURITY_SAML2_RELYINGPARTY_REGISTRATION_" (upper (default "keycloak" .Values.identity.config.saml.registrationId)) "_ASSERTINGPARTY_METADATA_URI" }}
+            value: {{ .Values.identity.config.saml.idpMetadataUri | quote }}
+          {{ end }}
+          {{ if .Values.identity.config.saml.idpEntityId }}
+          - name: {{ print "SPRING_SECURITY_SAML2_RELYINGPARTY_REGISTRATION_" (upper (default "keycloak" .Values.identity.config.saml.registrationId)) "_ASSERTINGPARTY_ENTITY_ID" }}
+            value: {{ .Values.identity.config.saml.idpEntityId | quote }}
+          {{ end }}
+          {{ if .Values.identity.config.saml.idpSsoUrl }}
+          - name: {{ print "SPRING_SECURITY_SAML2_RELYINGPARTY_REGISTRATION_" (upper (default "keycloak" .Values.identity.config.saml.registrationId)) "_ASSERTINGPARTY_SINGLESIGNON_URL" }}
+            value: {{ .Values.identity.config.saml.idpSsoUrl | quote }}
+          {{ end }}
+          - name: {{ print "SPRING_SECURITY_SAML2_RELYINGPARTY_REGISTRATION_" (upper (default "keycloak" .Values.identity.config.saml.registrationId)) "_ASSERTINGPARTY_SINGLESIGNON_SIGN_REQUEST" }}
+            value: {{ default false .Values.identity.config.saml.signRequest | quote }}
+          {{ end }}
+          - name: OIDC_ISSUER
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: oidcIssuer
+          - name: OIDC_CLIENT_ID
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: oidcClientId
+          - name: OIDC_CLIENT_REDIRECT_URI
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: oidcClientRedirectUri
+          - name: OIDC_CLIENT_POST_LOGOUT_REDIRECT_URI
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: oidcClientPostLogoutRedirectUri
+          - name: OIDC_ACCESS_TOKEN_TTL_MINUTES
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: oidcAccessTokenTtlMinutes
+          - name: OIDC_AUTH_CODE_TTL_MINUTES
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: oidcAuthCodeTtlMinutes
+          - name: OIDC_SIGNING_KEY_LOCATION
+            value: /secrets/identity-signing-key.p12
+          - name: OIDC_SIGNING_KEY_STORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: signingKeyStorePassword
+          - name: OIDC_SIGNING_KEY_ALIAS
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: signingKeyAlias
+          - name: OIDC_SIGNING_KEY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: signingKeyPassword
+          - name: LOGIN_MAX_FAILURES_PER_IP
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: maxFailuresPerIp
+          - name: LOGIN_MAX_FAILURES_PER_IP_USER
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: maxFailuresPerIpUser
+          - name: LOGIN_FAILURE_WINDOW_SECONDS
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: failureWindowSeconds
+          - name: TRUSTED_PROXIES
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: trustedProxies
+          - name: BRUTEFORCE_ALLOW_LIST
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-identity
+                key: bruteforceAllowList
+        resources:
+          requests:
+            cpu: {{ .Values.identity.resources.cpu.request }}
+            memory: {{ .Values.identity.resources.memory.request }}
+          limits:
+            cpu: {{ .Values.identity.resources.cpu.limit }}
+            memory: {{ .Values.identity.resources.memory.limit }}
+        volumeMounts:
+        - name: keystore-volume
+          mountPath: /secrets
+          readOnly: true
+      volumes:
+      - name: keystore-volume
+        secret:
+          secretName: {{ default (print .Release.Name "-identity-keystore") .Values.identity.config.signingKey.existingSecret }}
+          items:
+          - key: {{ .Values.identity.config.signingKey.secretKey | default "identity-signing-key.p12" }}
+            path: identity-signing-key.p12
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-identity
+data:
+  mysqlJdbcUri: {{ print "jdbc:mysql://" .Release.Name "-mysql:3306" | quote }}
+  mysqlUser: {{ .Values.mysql.auth.username | quote }}
+  samlEnabled: {{ .Values.identity.config.saml.enabled | quote }}
+  samlRegistrationId: {{ default "keycloak" .Values.identity.config.saml.registrationId | quote }}
+  samlPrincipalAttribute: {{ default "uid" .Values.identity.config.saml.principalAttribute | quote }}
+  samlPrenameAttribute: {{ default "givenName" .Values.identity.config.saml.prenameAttribute | quote }}
+  samlSurnameAttribute: {{ default "sn" .Values.identity.config.saml.surnameAttribute | quote }}
+  samlEmailAttribute: {{ default "mail" .Values.identity.config.saml.emailAttribute | quote }}
+  samlIdpMetadataUri: {{ default "" .Values.identity.config.saml.idpMetadataUri | quote }}
+  samlSpEntityId: {{ default "" .Values.identity.config.saml.spEntityId | quote }}
+  oidcIssuer: {{ include "oidc-issuer" . | quote }}
+  oidcClientId: {{ .Values.identity.config.oidc.clientId | quote }}
+  oidcClientRedirectUri: {{ .Values.identity.config.oidc.redirectUris | join "," | default (print (include "host" .) "/oauth2/callback") | quote }}
+  oidcClientPostLogoutRedirectUri: {{ .Values.identity.config.oidc.postLogoutRedirectUris | join "," | default (print (include "host" .) "/") | quote }}
+  oidcAccessTokenTtlMinutes: {{ .Values.identity.config.oidc.accessTokenTtlMinutes | default 15 | quote }}
+  oidcAuthCodeTtlMinutes: {{ .Values.identity.config.oidc.authCodeTtlMinutes | default 5 | quote }}
+  signingKeyAlias: {{ .Values.identity.config.signingKey.alias | default "identity-signing" | quote }}
+  maxFailuresPerIp: {{ .Values.identity.config.antiBruteForce.maxFailuresPerIp | default 150 | quote }}
+  maxFailuresPerIpUser: {{ .Values.identity.config.antiBruteForce.maxFailuresPerIpUser | default 15 | quote }}
+  failureWindowSeconds: {{ .Values.identity.config.antiBruteForce.windowSeconds | default 600 | quote }}
+  trustedProxies: {{ .Values.identity.config.antiBruteForce.trustedProxies | default 0 | quote }}
+  bruteforceAllowList: {{ .Values.identity.config.antiBruteForce.allowList | join "," | quote }}
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: {{ .Release.Name }}-identity
+data:
+  mysqlPassword: {{ .Values.mysql.auth.password | b64enc | quote }}
+  signingKeyStorePassword: {{ .Values.identity.config.signingKey.storePassword | b64enc | quote }}
+  signingKeyPassword: {{ .Values.identity.config.signingKey.keyPassword | b64enc | quote }}
+{{ if and .Values.identity.config.signingKey.keystore (not .Values.identity.config.signingKey.existingSecret) }}
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: {{ .Release.Name }}-identity-keystore
+data:
+  identity-signing-key.p12: {{ .Values.identity.config.signingKey.keystore | quote }}
+{{ end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-identity-service
+  labels:
+    app: {{ .Release.Name }}-identity-service
+spec:
+  selector:
+    app: {{ .Release.Name }}-identity-service
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+{{ if .Values.identity.ingress.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-identity-service
+  labels:
+    app: {{ .Release.Name }}-identity-service
+  {{- with .Values.identity.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.identity.ingress.className }}
+  ingressClassName: {{ .Values.identity.ingress.className }}
+  {{- end }}
+  {{- if .Values.identity.ingress.tls }}
+  tls:
+    {{- toYaml .Values.identity.ingress.tls | nindent 4 }}
+  {{- end }}
+  rules:
+  {{- if .Values.identity.ingress.hosts }}
+    {{- range .Values.identity.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+        {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType | default "Prefix" }}
+            backend:
+              service:
+                name: {{ $.Release.Name }}-identity-service
+                port:
+                  number: 8080
+        {{- end }}
+    {{- end }}
+  {{- else }}
+    - host: {{ .Values.common.config.hostname | quote }}
+      http:
+        paths:
+          - path: /oauth2/authorize
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /oauth2/token
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /oauth2/jwks
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /oauth2/revoke
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /oauth2/introspect
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /oauth2/userinfo
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /oauth2/device_authorization
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /oauth2/device_verification
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /.well-known
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /connect
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /login
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /logout
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /graphql
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /api/v2/application-providers
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /api/v2/admin/application-providers
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /api/v1/auth
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /api/v1/legal
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /manifest
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /health
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /saml2
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /legal
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /css
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /js
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+          - path: /images
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
+  {{- end }}
+{{ end }}
+{{ if .Values.identity.ingressRoute.enabled }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ .Release.Name }}-identity-service
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`{{ .Values.common.config.hostname }}`) && (PathPrefix(`/oauth2/authorize`) || PathPrefix(`/oauth2/token`) || PathPrefix(`/oauth2/jwks`) || PathPrefix(`/oauth2/revoke`) || PathPrefix(`/oauth2/introspect`) || PathPrefix(`/oauth2/userinfo`) || PathPrefix(`/.well-known`) || PathPrefix(`/connect`) || PathPrefix(`/login`) || PathPrefix(`/logout`) || PathPrefix(`/graphql`) || PathPrefix(`/api/v2/application-providers`) || PathPrefix(`/api/v2/admin/application-providers`) || PathPrefix(`/api/v1/auth`) || PathPrefix(`/api/v1/legal`) || Path(`/manifest`) || Path(`/health`) || PathPrefix(`/saml2`) || PathPrefix(`/legal`) || PathPrefix(`/css`) || PathPrefix(`/js`) || PathPrefix(`/images`))
+    kind: Rule
+    services:
+    - name: {{ .Release.Name }}-identity-service
+      port: 8080
+{{ end }}
+{{ end }}

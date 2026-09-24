@@ -14,7 +14,7 @@
   "packageRules": [
     {
       "extends": "group:allNonMajor",
-      "excludePackageNames": ["thmmniii/fbs-core"]
+      "excludePackageNames": ["ghcr.io/thm-mni-ii/fbs-core"]
     }
   ]
 }

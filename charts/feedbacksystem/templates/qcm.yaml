@@ -31,6 +31,10 @@ spec:
               secretKeyRef:
                 name: {{ .Release.Name }}-core
                 key: jwtSecret
+          - name: OIDC_ISSUER
+            value: {{ include "oidc-issuer" . | quote }}
+          - name: OIDC_JWK_SET_URI
+            value: {{ include "oidc-jwk-set-uri" . | quote }}
           - name: MONGODB_URL
             valueFrom:
               secretKeyRef:
@@ -94,6 +98,10 @@ spec:
         env:
           - name: NODE_ENV
             value: production
+          - name: BACKEND_URL
+            value: {{ default (print "http://" .Release.Name "-qcm-backend:3000/") .Values.qcm.frontend.config.backendUrl | quote }}
+          - name: CORE_URL
+            value: {{ default (print "https://" .Release.Name "-core/") .Values.qcm.frontend.config.coreUrl | quote }}
         resources:
           requests:
             cpu: {{ .Values.qcm.frontend.resources.cpu.request }}
@@ -116,6 +124,62 @@ spec:
       protocol: TCP
       port: 4173
       targetPort: 4173
+{{ if .Values.qcm.ingress.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-qcm
+  labels:
+    app: {{ .Release.Name }}-qcm
+  {{- with .Values.qcm.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.qcm.ingress.className }}
+  ingressClassName: {{ .Values.qcm.ingress.className }}
+  {{- end }}
+  {{- if .Values.qcm.ingress.tls }}
+  tls:
+    {{- toYaml .Values.qcm.ingress.tls | nindent 4 }}
+  {{- end }}
+  rules:
+  {{- if .Values.qcm.ingress.hosts }}
+    {{- range .Values.qcm.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+        {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType | default "Prefix" }}
+            backend:
+              service:
+                name: {{ default (print $.Release.Name "-qcm-frontend") .serviceName }}
+                port:
+                  number: {{ default 4173 .servicePort }}
+        {{- end }}
+    {{- end }}
+  {{- else }}
+    - host: {{ .Values.common.config.hostname | quote }}
+      http:
+        paths:
+          - path: /questionary/api_v1
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-qcm-backend
+                port:
+                  number: 3000
+          - path: /questionary
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-qcm-frontend
+                port:
+                  number: 4173
+  {{- end }}
+{{ end }}
 {{ if .Values.qcm.ingressRoute.enabled }}
 ---
 apiVersion: traefik.io/v1alpha1

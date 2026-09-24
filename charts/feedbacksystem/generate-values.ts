@@ -21,6 +21,31 @@ function buildValues(): any {
         port: host.port || 443,
       },
     },
+    webShell: {
+      enabled: true,
+      ingressRoute: {
+        enabled: true,
+      },
+    },
+    identity: {
+      enabled: true,
+      config: {
+        signingKey: {
+          storePassword: randomHex(),
+          alias: "identity-signing",
+          keyPassword: randomHex(),
+        },
+      },
+      ingressRoute: {
+        enabled: false,
+      },
+    },
+    courseManagementWeb: {
+      enabled: true,
+    },
+    sqlPlaygroundWeb: {
+      enabled: true,
+    },
     core: {
       config: {
         jwtSecret: randomHex(),

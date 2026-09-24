@@ -33,6 +33,10 @@ spec:
               secretKeyRef:
                 name: {{ .Release.Name }}-core
                 key: jwtSecret
+          - name: OIDC_ISSUER
+            value: {{ include "oidc-issuer" . | quote }}
+          - name: OIDC_JWK_SET_URI
+            value: {{ include "oidc-jwk-set-uri" . | quote }}
           - name: SERVER_SESSION_SECRET
             valueFrom:
               secretKeyRef:
@@ -47,6 +51,11 @@ spec:
           {{ else }}
             {{ fail "eat requires that the sql-checker is enabled" }}
           {{ end }}
+          - name: MONGODB_PLAYGROUND_URL
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-playground-mongodb
+                key: mongodbUri
         resources:
           requests:
             cpu: {{ .Values.eat.resources.cpu.request }}
@@ -77,6 +86,55 @@ spec:
       protocol: TCP
       port: 8050
       targetPort: 8050
+{{ if .Values.eat.ingress.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-eat
+  labels:
+    app: {{ .Release.Name }}-eat
+  {{- with .Values.eat.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.eat.ingress.className }}
+  ingressClassName: {{ .Values.eat.ingress.className }}
+  {{- end }}
+  {{- if .Values.eat.ingress.tls }}
+  tls:
+    {{- toYaml .Values.eat.ingress.tls | nindent 4 }}
+  {{- end }}
+  rules:
+  {{- if .Values.eat.ingress.hosts }}
+    {{- range .Values.eat.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+        {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType | default "Prefix" }}
+            backend:
+              service:
+                name: {{ $.Release.Name }}-eat
+                port:
+                  number: 8050
+        {{- end }}
+    {{- end }}
+  {{- else }}
+    - host: {{ .Values.common.config.hostname | quote }}
+      http:
+        paths:
+          - path: /eat
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-eat
+                port:
+                  number: 8050
+  {{- end }}
+{{ end }}
 {{ if .Values.eat.ingressRoute.enabled }}
 ---
 apiVersion: traefik.io/v1alpha1
