@@ -51,11 +51,11 @@ identity:
   config:
     saml:
       enabled: false
-      registrationId: "keycloak" # e.g. "thm" or "keycloak"
-      idpMetadataUri: "" # e.g. "https://idp.thm.de/idp/shibboleth"
+      registrationId: "keycloak"  # e.g. "thm" or "keycloak"
+      idpMetadataUri: ""  # e.g. "https://idp.thm.de/idp/shibboleth"
       idpEntityId: ""
       idpSsoUrl: ""
-      spEntityId: "" # Defaults to https://<host>/saml2/metadata/<registrationId> if empty
+      spEntityId: ""  # Defaults to https://<host>/saml2/metadata/<registrationId> if empty
       principalAttribute: "uid"
       prenameAttribute: "givenName"
       surnameAttribute: "sn"
