@@ -4,11 +4,169 @@ common:
     hostname: feedback.example.org
     port: 443
 
+webShell:
+  enabled: true
+  image:
+    registry: ghcr.io
+    name: thm-mni-ii/fbs-web-shell
+    tag: ""
+    pullPolicy: "IfNotPresent"
+  resources:
+    cpu:
+      request: 0.01
+      limit: 1
+    memory:
+      request: "50Mi"
+      limit: "500Mi"
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    hosts: []
+    #   - host: feedback.example.org
+    #     paths:
+    #       - path: /
+    #         pathType: Prefix
+    tls: []
+    #   - secretName: feedback-tls
+    #     hosts:
+    #       - feedback.example.org
+  ingressRoute:
+    enabled: false
+
+identity:
+  enabled: true
+  image:
+    registry: ghcr.io
+    name: thm-mni-ii/fbs-identity-service
+    tag: ""
+    pullPolicy: "IfNotPresent"
+  resources:
+    cpu:
+      request: 0.1
+      limit: 2
+    memory:
+      request: "250Mi"
+      limit: "4Gi"
+  config:
+    saml:
+      enabled: false
+      registrationId: "keycloak"  # e.g. "thm" or "keycloak"
+      idpMetadataUri: ""  # e.g. "https://idp.thm.de/idp/shibboleth"
+      idpEntityId: ""
+      idpSsoUrl: ""
+      spEntityId: ""  # Defaults to https://<host>/saml2/metadata/<registrationId> if empty
+      principalAttribute: "uid"
+      prenameAttribute: "givenName"
+      surnameAttribute: "sn"
+      emailAttribute: "mail"
+      signRequest: false
+    oidc:
+      issuer: ""  # Overwritten with common host if empty
+      jwkSetUri: ""  # Overwritten with internal identity service endpoint if empty
+      clientId: "fbs-web-shell,fbs-test-client"
+      redirectUris: []
+      postLogoutRedirectUris: []
+      accessTokenTtlMinutes: 15
+      authCodeTtlMinutes: 5
+    signingKey:
+      existingSecret: ""  # Name of existing secret containing identity-signing-key.p12
+      secretKey: "identity-signing-key.p12"
+      keystore: "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"  # Base64 encoded .p12 keystore file if not using existingSecret (CHANGE ME for production)
+      storePassword: "changeit"  # CHANGE ME
+      alias: "identity-signing"
+      keyPassword: "changeit"  # CHANGE ME
+    antiBruteForce:
+      maxFailuresPerIp: 150
+      maxFailuresPerIpUser: 15
+      windowSeconds: 600
+      trustedProxies: 0
+      allowList: []
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    hosts: []
+    #   - host: feedback.example.org
+    #     paths:
+    #       - path: /oauth2
+    #         pathType: Prefix
+    tls: []
+    #   - secretName: feedback-tls
+    #     hosts:
+    #       - feedback.example.org
+  ingressRoute:
+    enabled: false
+
+courseManagementWeb:
+  enabled: true
+  image:
+    registry: ghcr.io
+    name: thm-mni-ii/fbs-core-web
+    tag: ""
+    pullPolicy: "IfNotPresent"
+  resources:
+    cpu:
+      request: 0.01
+      limit: 1
+    memory:
+      request: "50Mi"
+      limit: "500Mi"
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    pathPrefix: "/course-management"
+    hosts: []
+    #   - host: feedback.example.org
+    #     paths:
+    #       - path: /course-management
+    #         pathType: Prefix
+    tls: []
+    #   - secretName: feedback-tls
+    #     hosts:
+    #       - feedback.example.org
+  ingressRoute:
+    enabled: false
+    pathPrefix: "/course-management"
+
+sqlPlaygroundWeb:
+  enabled: true
+  image:
+    registry: ghcr.io
+    name: thm-mni-ii/fbs-sql-playground-web
+    tag: ""
+    pullPolicy: "IfNotPresent"
+  resources:
+    cpu:
+      request: 0.01
+      limit: 1
+    memory:
+      request: "50Mi"
+      limit: "500Mi"
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    pathPrefix: "/sql-playground"
+    hosts: []
+    #   - host: feedback.example.org
+    #     paths:
+    #       - path: /sql-playground
+    #         pathType: Prefix
+    tls: []
+    #   - secretName: feedback-tls
+    #     hosts:
+    #       - feedback.example.org
+  ingressRoute:
+    enabled: false
+    pathPrefix: "/sql-playground"
+
 core:
   enabled: true
   image:
-    registry: docker.io
-    name: thmmniii/fbs-core
+    registry: ghcr.io
+    name: thm-mni-ii/fbs-core
     tag: ""
     pullPolicy: "IfNotPresent"
   volumes:
@@ -25,6 +183,17 @@ core:
     memory:
       request: "250Mi"
       limit: "4Gi"
+  probes:
+    readiness:
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
+    liveness:
+      initialDelaySeconds: 60
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 6
   config:
     jwtSecret: "2edb8793d987389e1626918e0ec1dbee"  # CHANGE ME
     ldap:
@@ -67,14 +236,30 @@ core:
       url: ""
       insecure: false
       sharedSecret: ""
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    servicePort: 443
+    hosts: []
+    #   - host: feedback.example.org
+    #     paths:
+    #       - path: /api/v1
+    #         pathType: Prefix
+    #       - path: /results
+    #         pathType: Prefix
+    tls: []
+    #   - secretName: feedback-tls
+    #     hosts:
+    #       - feedback.example.org
   ingressRoute:
     enabled: false
 
 runner:
   enabled: true
   image:
-    registry: docker.io
-    name: thmmniii/fbs-runner
+    registry: ghcr.io
+    name: thm-mni-ii/fbs-runner
     tag: ""
     pullPolicy: "IfNotPresent"
   resources:
@@ -90,9 +275,9 @@ runner:
       disableContainerRemoval: false
   sqlChecker:
     enabled: true
-    image: "thmmniii/fbs-sql-checker:latest"
+    image: "ghcr.io/thm-mni-ii/fbs-sql-checker:latest"
   bashChecker:
-    image: "thmmniii/fbs-runtime-bash:latest"
+    image: "ghcr.io/thm-mni-ii/fbs-runtime-bash:latest"
   dink:
     image:
       registry: docker.io
@@ -136,8 +321,8 @@ digitalClassroom:
 eat:
   enabled: false
   image:
-    registry: docker.io
-    name: thmmniii/fbs-eat
+    registry: ghcr.io
+    name: thm-mni-ii/fbs-eat
     tag: ""
     pullPolicy: "IfNotPresent"
   resources:
@@ -149,14 +334,27 @@ eat:
       limit: "4Gi"
   config:
     sessionSecret: fbs  # CHANGE ME
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    hosts: []
+    #   - host: feedback.example.org
+    #     paths:
+    #       - path: /eat
+    #         pathType: Prefix
+    tls: []
+    #   - secretName: feedback-tls
+    #     hosts:
+    #       - feedback.example.org
   ingressRoute:
     enabled: false
 
 collab:
   enabled: true
   image:
-    registry: docker.io
-    name: thmmniii/fbs-collab
+    registry: ghcr.io
+    name: thm-mni-ii/fbs-collab
     tag: ""
     pullPolicy: "IfNotPresent"
   resources:
@@ -166,6 +364,19 @@ collab:
     memory:
       request: "50Mi"
       limit: "1Gi"
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    hosts: []
+    #   - host: feedback.example.org
+    #     paths:
+    #       - path: /collab
+    #         pathType: Prefix
+    tls: []
+    #   - secretName: feedback-tls
+    #     hosts:
+    #       - feedback.example.org
   ingressRoute:
     enabled: false
 
@@ -173,8 +384,8 @@ qcm:
   enabled: true
   backend:
     image:
-      registry: docker.io
-      name: thmmniii/fbs-qcm-backend
+      registry: ghcr.io
+      name: thm-mni-ii/fbs-qcm-backend
       tag: ""
       pullPolicy: "IfNotPresent"
     resources:
@@ -186,8 +397,8 @@ qcm:
         limit: "1Gi"
   frontend:
     image:
-      registry: docker.io
-      name: thmmniii/fbs-qcm-frontend
+      registry: ghcr.io
+      name: thm-mni-ii/fbs-qcm-frontend
       tag: ""
       pullPolicy: "IfNotPresent"
     resources:
@@ -197,6 +408,24 @@ qcm:
       memory:
         request: "50Mi"
         limit: "1Gi"
+    config:
+      backendUrl: ""
+      coreUrl: ""
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    hosts: []
+    #   - host: feedback.example.org
+    #     paths:
+    #       - path: /questionary
+    #         pathType: Prefix
+    #       - path: /questionary/api_v1
+    #         pathType: Prefix
+    tls: []
+    #   - secretName: feedback-tls
+    #     hosts:
+    #       - feedback.example.org
   ingressRoute:
     enabled: false
 
@@ -209,6 +438,7 @@ mysql:
     password: fbs  # CHANGE ME
     rootPassword: root  # CHANGE ME
     createDatabase: true
+  initdbScriptsConfigMap: '{{ .Release.Name }}-mysql-init-scripts'
   primary:
     existingConfigmap: '{{ .Release.Name }}-mysql-config'
 

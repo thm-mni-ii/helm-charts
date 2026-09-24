@@ -6,6 +6,38 @@
 {{- end -}}
 {{- end -}}
 
+{{- define "fbs-identity-image" -}}
+{{ print .Values.identity.image.registry "/" .Values.identity.image.name ":" (default .Chart.AppVersion .Values.identity.image.tag) }}
+{{- end -}}
+
+{{- define "fbs-web-shell-image" -}}
+{{ print .Values.webShell.image.registry "/" .Values.webShell.image.name ":" (default .Chart.AppVersion .Values.webShell.image.tag) }}
+{{- end -}}
+
+{{- define "fbs-course-management-web-image" -}}
+{{ print .Values.courseManagementWeb.image.registry "/" .Values.courseManagementWeb.image.name ":" (default .Chart.AppVersion .Values.courseManagementWeb.image.tag) }}
+{{- end -}}
+
+{{- define "fbs-sql-playground-web-image" -}}
+{{ print .Values.sqlPlaygroundWeb.image.registry "/" .Values.sqlPlaygroundWeb.image.name ":" (default .Chart.AppVersion .Values.sqlPlaygroundWeb.image.tag) }}
+{{- end -}}
+
+{{- define "oidc-issuer" -}}
+{{- if and .Values.identity .Values.identity.config .Values.identity.config.oidc .Values.identity.config.oidc.issuer -}}
+{{ .Values.identity.config.oidc.issuer }}
+{{- else -}}
+{{ include "host" . }}
+{{- end -}}
+{{- end -}}
+
+{{- define "oidc-jwk-set-uri" -}}
+{{- if and .Values.identity .Values.identity.config .Values.identity.config.oidc .Values.identity.config.oidc.jwkSetUri -}}
+{{ .Values.identity.config.oidc.jwkSetUri }}
+{{- else -}}
+{{ print "http://" .Release.Name "-identity-service:8080/oauth2/jwks" }}
+{{- end -}}
+{{- end -}}
+
 {{- define "fbs-core-image" -}}
 {{ print .Values.core.image.registry "/" .Values.core.image.name ":" (default .Chart.AppVersion .Values.core.image.tag) }}
 {{- end -}}

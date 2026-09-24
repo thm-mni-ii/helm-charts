@@ -36,3 +36,14 @@ data:
     port=3306
     socket=/opt/bitnami/mysql/tmp/mysql.sock
     pid-file=/opt/bitnami/mysql/tmp/mysqld.pid
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-mysql-init-scripts
+data:
+  01_create_identity_database.sql: |-
+    CREATE DATABASE IF NOT EXISTS `fbs_identity` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+    GRANT ALL PRIVILEGES ON `fbs_identity`.* TO '{{ .Values.mysql.auth.username }}'@'%';
+    FLUSH PRIVILEGES;
+

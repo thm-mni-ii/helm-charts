@@ -1,0 +1,130 @@
+{{ if .Values.courseManagementWeb.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-course-management-web
+  labels:
+    app: {{ .Release.Name }}-course-management-web
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-course-management-web
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-course-management-web
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-course-management-web
+        image: {{ include "fbs-course-management-web-image" . }}
+        imagePullPolicy: {{ .Values.courseManagementWeb.image.pullPolicy }}
+        ports:
+        - containerPort: 80
+          name: http
+        env:
+          - name: FBS_CORE_URL
+            value: https://{{ .Release.Name }}-core:443
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 6
+        resources:
+          requests:
+            cpu: {{ .Values.courseManagementWeb.resources.cpu.request }}
+            memory: {{ .Values.courseManagementWeb.resources.memory.request }}
+          limits:
+            cpu: {{ .Values.courseManagementWeb.resources.cpu.limit }}
+            memory: {{ .Values.courseManagementWeb.resources.memory.limit }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-course-management-web
+  labels:
+    app: {{ .Release.Name }}-course-management-web
+spec:
+  selector:
+    app: {{ .Release.Name }}-course-management-web
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+{{ if .Values.courseManagementWeb.ingress.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-course-management-web
+  labels:
+    app: {{ .Release.Name }}-course-management-web
+  {{- with .Values.courseManagementWeb.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.courseManagementWeb.ingress.className }}
+  ingressClassName: {{ .Values.courseManagementWeb.ingress.className }}
+  {{- end }}
+  {{- if .Values.courseManagementWeb.ingress.tls }}
+  tls:
+    {{- toYaml .Values.courseManagementWeb.ingress.tls | nindent 4 }}
+  {{- end }}
+  rules:
+  {{- if .Values.courseManagementWeb.ingress.hosts }}
+    {{- range .Values.courseManagementWeb.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+        {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType | default "Prefix" }}
+            backend:
+              service:
+                name: {{ $.Release.Name }}-course-management-web
+                port:
+                  number: 80
+        {{- end }}
+    {{- end }}
+  {{- else }}
+    - host: {{ .Values.common.config.hostname | quote }}
+      http:
+        paths:
+          - path: {{ .Values.courseManagementWeb.ingress.pathPrefix | default .Values.courseManagementWeb.ingressRoute.pathPrefix | default "/course-management" }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-course-management-web
+                port:
+                  number: 80
+  {{- end }}
+{{ end }}
+{{ if .Values.courseManagementWeb.ingressRoute.enabled }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ .Release.Name }}-course-management-web
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`{{ .Values.common.config.hostname }}`) && PathPrefix(`{{ .Values.courseManagementWeb.ingressRoute.pathPrefix | default "/course-management" }}`)
+    kind: Rule
+    services:
+    - name: {{ .Release.Name }}-course-management-web
+      port: 80
+{{ end }}
+{{ end }}

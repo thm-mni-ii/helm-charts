@@ -1,0 +1,130 @@
+{{ if .Values.sqlPlaygroundWeb.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-sql-playground-web
+  labels:
+    app: {{ .Release.Name }}-sql-playground-web
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-sql-playground-web
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-sql-playground-web
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-sql-playground-web
+        image: {{ include "fbs-sql-playground-web-image" . }}
+        imagePullPolicy: {{ .Values.sqlPlaygroundWeb.image.pullPolicy }}
+        ports:
+        - containerPort: 80
+          name: http
+        env:
+          - name: FBS_CORE_URL
+            value: https://{{ .Release.Name }}-core:443
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 6
+        resources:
+          requests:
+            cpu: {{ .Values.sqlPlaygroundWeb.resources.cpu.request }}
+            memory: {{ .Values.sqlPlaygroundWeb.resources.memory.request }}
+          limits:
+            cpu: {{ .Values.sqlPlaygroundWeb.resources.cpu.limit }}
+            memory: {{ .Values.sqlPlaygroundWeb.resources.memory.limit }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-sql-playground-web
+  labels:
+    app: {{ .Release.Name }}-sql-playground-web
+spec:
+  selector:
+    app: {{ .Release.Name }}-sql-playground-web
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+{{ if .Values.sqlPlaygroundWeb.ingress.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-sql-playground-web
+  labels:
+    app: {{ .Release.Name }}-sql-playground-web
+  {{- with .Values.sqlPlaygroundWeb.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.sqlPlaygroundWeb.ingress.className }}
+  ingressClassName: {{ .Values.sqlPlaygroundWeb.ingress.className }}
+  {{- end }}
+  {{- if .Values.sqlPlaygroundWeb.ingress.tls }}
+  tls:
+    {{- toYaml .Values.sqlPlaygroundWeb.ingress.tls | nindent 4 }}
+  {{- end }}
+  rules:
+  {{- if .Values.sqlPlaygroundWeb.ingress.hosts }}
+    {{- range .Values.sqlPlaygroundWeb.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+        {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType | default "Prefix" }}
+            backend:
+              service:
+                name: {{ $.Release.Name }}-sql-playground-web
+                port:
+                  number: 80
+        {{- end }}
+    {{- end }}
+  {{- else }}
+    - host: {{ .Values.common.config.hostname | quote }}
+      http:
+        paths:
+          - path: {{ .Values.sqlPlaygroundWeb.ingress.pathPrefix | default .Values.sqlPlaygroundWeb.ingressRoute.pathPrefix | default "/sql-playground" }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-sql-playground-web
+                port:
+                  number: 80
+  {{- end }}
+{{ end }}
+{{ if .Values.sqlPlaygroundWeb.ingressRoute.enabled }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ .Release.Name }}-sql-playground-web
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`{{ .Values.common.config.hostname }}`) && PathPrefix(`{{ .Values.sqlPlaygroundWeb.ingressRoute.pathPrefix | default "/sql-playground" }}`)
+    kind: Rule
+    services:
+    - name: {{ .Release.Name }}-sql-playground-web
+      port: 80
+{{ end }}
+{{ end }}
