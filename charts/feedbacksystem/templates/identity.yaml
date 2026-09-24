@@ -1,4 +1,7 @@
 {{ if .Values.identity.enabled }}
+{{- if and (not .Values.identity.config.signingKey.keystore) (not .Values.identity.config.signingKey.existingSecret) }}
+{{- fail "identity requires either identity.config.signingKey.existingSecret or identity.config.signingKey.keystore to be set" }}
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -252,7 +255,7 @@ type: Opaque
 metadata:
   name: {{ .Release.Name }}-identity-keystore
 data:
-  identity-signing-key.p12: {{ .Values.identity.config.signingKey.keystore | quote }}
+  {{ .Values.identity.config.signingKey.secretKey | default "identity-signing-key.p12" }}: {{ .Values.identity.config.signingKey.keystore | quote }}
 {{ end }}
 ---
 apiVersion: v1
