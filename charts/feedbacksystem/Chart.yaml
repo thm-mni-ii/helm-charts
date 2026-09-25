@@ -6,7 +6,7 @@ sources:
   - https://github.com/thm-mni-ii/feedbacksystem
 home: https://github.com/thm-mni-ii/feedbacksystem
 type: application
-version: 0.48.0
+version: 0.49.0
 # renovate: image=ghcr.io/thm-mni-ii/fbs-core
 appVersion: v2.0.1
 dependencies:
@@ -19,7 +19,7 @@ dependencies:
     repository: 'https://charts.bitnami.com/bitnami'
     condition: runner.enabled
   - name: postgresql
-    version: 12.12.10
+    version: 18.12.2
     repository: 'https://charts.bitnami.com/bitnami'
     condition: runner.enabled
     alias: runnerPostgres
@@ -34,12 +34,12 @@ dependencies:
     condition: runner.sqlChecker.enabled
     alias: checkerMongodb
   - name: postgresql
-    version: 12.12.10
+    version: 18.12.2
     repository: 'https://charts.bitnami.com/bitnami'
     condition: runner.enabled
     alias: runnerPlaygroundPostgres
   - name: postgresql
-    version: 12.12.10
+    version: 18.12.2
     repository: 'https://charts.bitnami.com/bitnami'
     condition: runner.enabled
     alias: playgroundSharePostgres
