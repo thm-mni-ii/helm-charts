@@ -124,6 +124,13 @@ spec:
                 key: authSource
           - name: SELF_URL
             value: https://{{ .Release.Name }}-core
+          - name: MASTER_RUNNER_SELF_URL
+            value: https://{{ .Release.Name }}-core
+          - name: PUBLIC_SELF_URL
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-common
+                key: host
           - name: OIDC_ISSUER
             value: {{ include "oidc-issuer" . | quote }}
           - name: OIDC_JWK_SET_URI
