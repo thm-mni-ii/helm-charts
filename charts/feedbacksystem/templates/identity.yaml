@@ -354,6 +354,13 @@ spec:
                 name: {{ .Release.Name }}-identity-service
                 port:
                   number: 8080
+          - path: /userinfo
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-identity-service
+                port:
+                  number: 8080
           - path: /oauth2/device_authorization
             pathType: Prefix
             backend:
@@ -492,7 +499,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-  - match: Host(`{{ .Values.common.config.hostname }}`) && (PathPrefix(`/oauth2/authorize`) || PathPrefix(`/oauth2/token`) || PathPrefix(`/oauth2/jwks`) || PathPrefix(`/oauth2/revoke`) || PathPrefix(`/oauth2/introspect`) || PathPrefix(`/oauth2/userinfo`) || PathPrefix(`/.well-known`) || PathPrefix(`/connect`) || PathPrefix(`/login`) || PathPrefix(`/logout`) || PathPrefix(`/graphql`) || PathPrefix(`/api/v2/application-providers`) || PathPrefix(`/api/v2/admin/application-providers`) || PathPrefix(`/api/v1/auth`) || PathPrefix(`/api/v1/legal`) || Path(`/manifest`) || Path(`/health`) || PathPrefix(`/saml2`) || PathPrefix(`/legal`) || PathPrefix(`/css`) || PathPrefix(`/js`) || PathPrefix(`/images`))
+  - match: Host(`{{ .Values.common.config.hostname }}`) && (PathPrefix(`/oauth2/authorize`) || PathPrefix(`/oauth2/token`) || PathPrefix(`/oauth2/jwks`) || PathPrefix(`/oauth2/revoke`) || PathPrefix(`/oauth2/introspect`) || PathPrefix(`/oauth2/userinfo`) || PathPrefix(`/userinfo`) || PathPrefix(`/.well-known`) || PathPrefix(`/connect`) || PathPrefix(`/login`) || PathPrefix(`/logout`) || PathPrefix(`/graphql`) || PathPrefix(`/api/v2/application-providers`) || PathPrefix(`/api/v2/admin/application-providers`) || PathPrefix(`/api/v1/auth`) || PathPrefix(`/api/v1/legal`) || Path(`/manifest`) || Path(`/health`) || PathPrefix(`/saml2`) || PathPrefix(`/legal`) || PathPrefix(`/css`) || PathPrefix(`/js`) || PathPrefix(`/images`))
     kind: Rule
     services:
     - name: {{ .Release.Name }}-identity-service
