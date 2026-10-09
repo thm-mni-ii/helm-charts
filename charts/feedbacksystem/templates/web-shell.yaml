@@ -66,6 +66,9 @@ data:
         handle @oauth2Backend {
             reverse_proxy http://{{ .Release.Name }}-identity-service:8080
         }
+        handle /userinfo* {
+            reverse_proxy http://{{ .Release.Name }}-identity-service:8080
+        }
         handle /.well-known/* {
             reverse_proxy http://{{ .Release.Name }}-identity-service:8080
         }
