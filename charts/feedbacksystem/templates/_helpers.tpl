@@ -1,8 +1,19 @@
 {{- define "host" -}}
-{{- if or (and (eq .Values.common.config.protocol "https:") (ne (toString .Values.common.config.port) "443")) (and (eq .Values.common.config.protocol "http:") (ne (toString .Values.common.config.port) "80")) -}}
-{{ print .Values.common.config.protocol "//" .Values.common.config.hostname ":" .Values.common.config.port }}
+{{- if and .Values.common (hasKey .Values.common "baseUrl") .Values.common.baseUrl -}}
+{{ .Values.common.baseUrl | trimSuffix "/" }}
+{{- else if and .Values.common .Values.common.config (hasKey .Values.common.config "baseUrl") .Values.common.config.baseUrl -}}
+{{ .Values.common.config.baseUrl | trimSuffix "/" }}
 {{- else -}}
-{{ print .Values.common.config.protocol "//" .Values.common.config.hostname }}
+{{- $proto := .Values.common.config.protocol | default "https:" -}}
+{{- if not (hasSuffix ":" $proto) -}}
+  {{- $proto = print $proto ":" -}}
+{{- end -}}
+{{- $port := toString (default (ternary 443 80 (eq $proto "https:")) .Values.common.config.port) -}}
+{{- if or (and (eq $proto "https:") (ne $port "443")) (and (eq $proto "http:") (ne $port "80")) -}}
+{{ print $proto "//" .Values.common.config.hostname ":" $port }}
+{{- else -}}
+{{ print $proto "//" .Values.common.config.hostname }}
+{{- end -}}
 {{- end -}}
 {{- end -}}
 
@@ -24,7 +35,7 @@
 
 {{- define "oidc-issuer" -}}
 {{- if and .Values.identity .Values.identity.config .Values.identity.config.oidc .Values.identity.config.oidc.issuer -}}
-{{ .Values.identity.config.oidc.issuer }}
+{{ .Values.identity.config.oidc.issuer | trimSuffix "/" }}
 {{- else -}}
 {{ include "host" . }}
 {{- end -}}

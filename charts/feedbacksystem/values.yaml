@@ -1,5 +1,6 @@
 common:
   config:
+    baseUrl: ""  # Optional: base URL (e.g. "https://feedback.mni.thm.de"). Overrides protocol/hostname/port if set.
     protocol: "https:"
     hostname: feedback.example.org
     port: 443

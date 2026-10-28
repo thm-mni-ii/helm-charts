@@ -131,6 +131,11 @@ spec:
               configMapKeyRef:
                 name: {{ .Release.Name }}-common
                 key: host
+          - name: FEEDBACK_BASE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-common
+                key: host
           - name: OIDC_ISSUER
             value: {{ include "oidc-issuer" . | quote }}
           - name: OIDC_JWK_SET_URI
