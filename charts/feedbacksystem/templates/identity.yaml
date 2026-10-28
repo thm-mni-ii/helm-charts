@@ -61,6 +61,11 @@ spec:
               configMapKeyRef:
                 name: {{ .Release.Name }}-common
                 key: host
+          - name: FEEDBACK_BASE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-common
+                key: host
           - name: APP_SAML_ENABLED
             valueFrom:
               configMapKeyRef:

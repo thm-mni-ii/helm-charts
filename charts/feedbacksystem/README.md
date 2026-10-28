@@ -92,11 +92,12 @@ EOF
 
 ### Common
 
-| Parameter              | Description       | Default              |
-| ---------------------- | ----------------- | -------------------- |
-| common.config.protocol | The Used Protocol | https:               |
-| common.config.hostname | The Used Hostname | feedback.example.org |
-| common.config.port     | The Used Port     | 443                  |
+| Parameter              | Description                                             | Default              |
+| ---------------------- | ------------------------------------------------------- | -------------------- |
+| common.config.baseUrl  | Optional explicit base URL (overrides protocol/host/port)| ""                   |
+| common.config.protocol | The Used Protocol                                       | https:               |
+| common.config.hostname | The Used Hostname                                       | feedback.example.org |
+| common.config.port     | The Used Port                                           | 443                  |
 
 ### Web Shell (Main Frontend Portal)
 
